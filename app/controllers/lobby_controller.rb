@@ -1,9 +1,7 @@
 class LobbyController < ApplicationController
   before_action :authenticate_user!
 
-  def new
+  def index 
   end
 
-  def create
-  end
 end
