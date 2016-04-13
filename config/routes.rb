@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+    get 'lobby', to: 'lobby#index'
+
     get 'lobby/index'
 
     get 'lobby/new'
