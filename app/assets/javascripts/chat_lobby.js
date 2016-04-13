@@ -1,24 +1,25 @@
 var ready = function() {
-    var scheme   = "ws://";
+    var scheme   = "wss://";
     var uri      = scheme + window.document.location.host + "/";
     var ws       = new WebSocket(uri);
     ws.onmessage = function(message) {
           var data = JSON.parse(message.data);
-            $("#chat-text").append("<div class='panel panel-default'><div class='panel-heading'>" + data.handle + "</div><div class='panel-body'>" + data.text + "</div></div>");
-            $("#chat-text").stop().animate({
-                    scrollTop: $('#chat-text')[0].scrollHeight
-                          
+            $("#chat-window").append("<div class='lobby-chat-message'><span class='lobby-chat-timestamp'>"+data.time+"</span><span class='lobby-chat-username'> - "+data.handle+"</span>: "+data.text+"</div>");
+            $("#chat-window").stop().animate({
+                    scrollTop: $('#chat-window')[0].scrollHeight
             }, 800);
 
     };
 
-    $("#input-form").on("submit", function(event) {
+    $("#chat-form").on("submit", function(event) {
         event.preventDefault();
+        var time = $("#input-time")[0].value;
         var handle = $("#input-handle")[0].value;
         var text   = $("#input-text")[0].value;
+        console.log("Time: " + time);
         console.log("Handle: " + handle);
         console.log("Text: " + text);
-        ws.send(JSON.stringify({ handle: handle, text: text  }));
+        ws.send(JSON.stringify({ time: time, handle: handle, text: text  }));
         $("#input-text")[0].value = "";
 
     });

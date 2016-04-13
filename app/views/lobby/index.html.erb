@@ -5,45 +5,38 @@
     <!-- Left Container -->
     <div class="col-sm-4 col-md-4 lobby-games-container">
         <div class="col-sm-12 col-md-12 lobby-games-window">
-            <p>INDEX</p>
+            <% if user_signed_in? %>
+                  <div>Signed in as... <%= current_user.email %></div>
+            <% end %>
             <%= link_to "Sign out", destroy_user_session_path, :method => :delete %>
         </div>
     </div>
 
     <!-- Right Container -->
     <div class="col-sm-8 col-md-8 lobby-chat-container">
-        <form id="input-form" class="col-sm-12 col-md-12 lobby-chat-form">
-            <div class="row lobby-chat-window">
+        <form id="chat-form" autocomplete="off" class="col-sm-12 col-md-12 lobby-chat-form">
+            <div id="chat-window" class="row lobby-chat-window">
                 <!-- This is where messages are posted. -->
-                <p class="lobby-chat-message">
-                <span class="lobby-chat-timestamp">04-12-16/10:19:36></span>  <span class="lobby-chat-username">Sebastian:</span> Hello!
-                </p>
-                <p class="lobby-chat-message">
-                    <span class="lobby-chat-timestamp">04-12-16/10:19:39></span>  <span class="lobby-chat-username">Andie: </span> When is the game going to start?!</p>
-                </p>
+                <%#<p class="lobby-chat-message">%>
+                    <%#<span class="lobby-chat-timestamp">04-12-16/10:19:36></span>  <span class="lobby-chat-username">Sebastian:</span> Hello!%>
+                <%#</p>%>
+                <%#<p class="lobby-chat-message">%>
+                    <%#<span class="lobby-chat-timestamp">04-12-16/10:19:39></span>  <span class="lobby-chat-username">Andie: </span> When is the game going to start?!</p>%>
+                <%#</p>%>
             </div>
 
             <!-- Message input -->
             <div class="row lobby-chat-message-container">
                 <%#<div class="input-group col-md-12" style="height: 100%">%>
                 <div class="input-group col-md-12">
-                    <input type="text" class="form-control lobby-chat-message-input" placeholder="Send a message...">
+                    <input id="input-text" type="text" class="form-control lobby-chat-message-input" placeholder="Send a message...">
+                    <input id="input-time" type="hidden" value="<%= Time.now %>">
+                    <input id="input-handle" type="hidden" value="<%= current_user.email.slice(0 ... (current_user.email.index('@'))) %>">
                     <span class="input-group-btn">
                         <button class="btn btn-secondary lobby-chat-message-send-btn" type="submit">Send</button>
                     </span>
                 </div>
             </div>
-
-
-
-            <%#<div class="row lobby-chat-message-container">%>
-                <%#<div class="col-sm-11 col-md-11">%>
-                    <%#<input id="lobby-chat-message-input" type="text" class="form-control" placeholder="Enter chat text here!" autofocus />%>
-                <%#</div>%>
-                <%#<div class="col-sm-1 col-md-1">%>
-                    <%#<button class="btn btn-primary lobby-chat-message-send-btn" type="submit">Send</button>%>
-                <%#</div>%>
-           <%#</div>%>
         </form>
     </div>
 </div>
