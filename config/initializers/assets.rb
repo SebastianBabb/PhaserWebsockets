@@ -5,6 +5,7 @@ Rails.application.config.assets.version = '1.0'
 Rails.application.config.assets.precompile += %w( signin.css  )
 Rails.application.config.assets.precompile += %w( lobby.css  )
 Rails.application.config.assets.precompile += %w( logout.css  )
+Rails.application.config.assets.precompile += %w( game.css  )
 
 # Add additional assets to the asset load path
 # Rails.application.config.assets.paths << Emoji.images_path
