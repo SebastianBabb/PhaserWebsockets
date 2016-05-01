@@ -12,15 +12,15 @@ MissileCommand.Preloader.prototype = {
 
 	preload: function () {
 
-		this.preloadBar = this.add.sprite(120, 200, 'preloaderBar');
+		this.preloadBar = this.add.sprite(120, 200, 'missile-command/preloaderBar');
 		this.load.setPreloadSprite(this.preloadBar);
 
-		this.load.image('titlepage', '<%= asset_path('title-page.png') %>');
-		this.load.image('land', '<%= asset_path('land.png') %>');
-		this.load.image('marker', '<%= asset_path('marker.png') %>');
-		this.load.image('missile', '<%= asset_path('missile.png') %>');
-		this.load.image('sky', '<%= asset_path('sky.png') %>');
-		this.load.spritesheet('city', '<%= asset_path('city.png') %>', 64, 36);
+		this.load.image('titlepage', '<%= asset_path('missile-command/title-page.png') %>');
+		this.load.image('land', '<%= asset_path('missile-command/land.png') %>');
+		this.load.image('marker', '<%= asset_path('missile-command/marker.png') %>');
+		this.load.image('missile', '<%= asset_path('missile-command/missile.png') %>');
+		this.load.image('sky', '<%= asset_path('missile-command/sky.png') %>');
+		this.load.spritesheet('city', '<%= asset_path('missile-command/city.png') %>', 64, 36);
 
 	},
 

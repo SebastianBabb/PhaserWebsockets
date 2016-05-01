@@ -17,3 +17,4 @@
 //= require_tree .
 // Requires the missile-command-src directory in app/assets/javascript/
 //= require_tree ./missile-command-src
+//= require_tree ./twisted-metal-src
