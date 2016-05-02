@@ -24,32 +24,37 @@ class ChatBackend
     end
 
     def call(env)
-      if Faye::WebSocket.websocket?(env)
-        ws = Faye::WebSocket.new(env, nil, {ping: KEEPALIVE_TIME })
-        ws.on :open do |event|
-          p [:open, ws.object_id]
-          @clients << ws
-        end
-
-        ws.on :message do |event|
-          p [:message, event.data]
-          #@redis.publish(CHANNEL, sanitize(event.data))
-          @clients.each do |client|
-              client.send(event.data)
+      p "Environment: #{env['PATH_INFO']}"
+      # Only load the backend chat server when websocket attempts to connect to */chat
+      if env['PATH_INFO'] == '/chat' 
+        if Faye::WebSocket.websocket?(env)
+          ws = Faye::WebSocket.new(env, nil, {ping: KEEPALIVE_TIME })
+          ws.on :open do |event|
+            p [:open, ws.object_id]
+            p ["Openning Chat Websocket"]
+            @clients << ws
           end
-        end
 
-        ws.on :close do |event|
-          p [:close, ws.object_id, event.code, event.reason]
-          @clients.delete(ws)
-          ws = nil
-        end
+          ws.on :message do |event|
+            p [:message, event.data]
+            #@redis.publish(CHANNEL, sanitize(event.data))
+            @clients.each do |client|
+                client.send(event.data)
+            end
+          end
 
-        # Return async Rack response
-        ws.rack_response
+          ws.on :close do |event|
+            p [:close, ws.object_id, event.code, event.reason]
+            p ["Closing Chat Websocket"]
+            @clients.delete(ws)
+            ws = nil
+          end
 
+          # Return async Rack response
+          ws.rack_response
+      end
       else
-        @app.call(env)
+          @app.call(env)
       end
     end
 

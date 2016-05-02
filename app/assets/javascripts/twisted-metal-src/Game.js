@@ -13,7 +13,8 @@ TwistedMetal.Game = function (game) {
 
     // Websocket configurations.
     this.scheme = "ws://";
-    this.uri = this.scheme + window.document.location.host + "/";
+    // Ensure the socket uri has /game appended to it so the proper middleware is loaded.
+    this.uri = this.scheme + window.document.location.host + "/game";
     this.ws;
 };
 
@@ -21,8 +22,9 @@ TwistedMetal.Game = function (game) {
 TwistedMetal.Game.prototype = {
 
 	create: function () {
+        console.log("Game.js");
         // Create a websocket object.
-        this.ws = new WebSocket(this.uri);
+        // this.ws = new WebSocket(this.uri);
 
         //  Resize our game world to be a 2000 x 2000 square
         this.game.world.setBounds(-1000, -1000, 2000, 2000);

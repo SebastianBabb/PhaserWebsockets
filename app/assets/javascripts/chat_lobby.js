@@ -1,8 +1,11 @@
+var ws; // Websocket object.
+
 var ready = function() {
+    console.log('chat_lobby');
     var scheme   = "ws://"; // For local.
     //var scheme   = "wss://"; // For heroku.
-    var uri      = scheme + window.document.location.host + "/";
-    var ws       = new WebSocket(uri);
+    var uri = scheme + window.document.location.host + "/chat";
+    ws = new WebSocket(uri);
 
     // Handle messages recieved from the server.
     ws.onmessage = function(message) {
@@ -27,6 +30,13 @@ var ready = function() {
         $("#input-text")[0].value = "";
 
     });
+
+}
+
+// Close the chat socket - called when gam starts.
+function closeConnection() {
+    console.log("closeConnection()");
+    ws.close();
 }
 
 $(document).ready(ready);

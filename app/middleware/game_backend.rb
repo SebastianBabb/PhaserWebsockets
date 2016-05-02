@@ -24,35 +24,40 @@ class GameBackend
     end
 
     def call(env)
-      if Faye::WebSocket.websocket?(env)
-        ws = Faye::WebSocket.new(env, nil, {ping: KEEPALIVE_TIME })
-        ws.on :open do |event|
-          p [:open, ws.object_id]
-          @clients << ws
-          # Add joining player to game.
-          @clients.each do |client|
-            client.send(event.data)
-          end
-        end
-
-        ws.on :message do |event|
-          # Parse message and broadcast it to each connected client.
-          p [:message, event.data]
-          #@redis.publish(CHANNEL, sanitize(event.data))
-          @clients.each do |client|
+      p "Environment: #{env['PATH_INFO']}"
+      # Only load the backend server when websocket attempts to connect to */chat
+      if env['PATH_INFO'] == '/game' 
+        if Faye::WebSocket.websocket?(env)
+          ws = Faye::WebSocket.new(env, nil, {ping: KEEPALIVE_TIME })
+          ws.on :open do |event|
+            p [:open, ws.object_id]
+            p ["Openning Game Websocket"]
+            @clients << ws
+            # Add joining player to game.
+            @clients.each do |client|
               client.send(event.data)
-          end
-        end
+            end
+         end
 
-        ws.on :close do |event|
-          p [:close, ws.object_id, event.code, event.reason]
-          @clients.delete(ws)
-          ws = nil
-        end
+         ws.on :message do |event|
+            # Parse message and broadcast it to each connected client.
+            p [:message, event.data]
+            #@redis.publish(CHANNEL, sanitize(event.data))
+            @clients.each do |client|
+                client.send(event.data)
+            end
+         end
+
+         ws.on :close do |event|
+            p [:close, ws.object_id, event.code, event.reason]
+            p ["Closing Game Websocket"]
+            @clients.delete(ws)
+            ws = nil
+         end
 
         # Return async Rack response
         ws.rack_response
-
+      end
       else
         @app.call(env)
       end
