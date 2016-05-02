@@ -3,6 +3,8 @@ var ready = function() {
     //var scheme   = "wss://"; // For heroku.
     var uri      = scheme + window.document.location.host + "/";
     var ws       = new WebSocket(uri);
+
+    // Handle messages recieved from the server.
     ws.onmessage = function(message) {
           var data = JSON.parse(message.data);
             $("#chat-window").append("<div class='lobby-chat-message'><span class='lobby-chat-timestamp'>"+data.time+"</span><span class='lobby-chat-username'> - "+data.handle+"</span>: "+data.text+"</div>");
@@ -12,6 +14,7 @@ var ready = function() {
 
     };
 
+    // Send messages to the server.
     $("#chat-form").on("submit", function(event) {
         event.preventDefault();
         var time = $("#input-time")[0].value;

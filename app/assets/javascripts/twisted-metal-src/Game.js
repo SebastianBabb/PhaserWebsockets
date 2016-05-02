@@ -2,16 +2,11 @@
 TwistedMetal.Game = function (game) {
     this.game = game;
 
-    this.land;
-    this.tank;
+    this.land;  // Background.
+    this.tank;  
 
-    this.enemies;
-    this.enemyBullets;
-    this.enemiesTotal = 0;
-    this.enemiesAlive = 0;
     this.explosions;
 
-    this.currentSpeed = 0;
     this.cursors;
 
     this.bullets;
@@ -28,7 +23,6 @@ TwistedMetal.Game.prototype = {
 	create: function () {
         // Create a websocket object.
         this.ws = new WebSocket(this.uri);
-
 
         //  Resize our game world to be a 2000 x 2000 square
         this.game.world.setBounds(-1000, -1000, 2000, 2000);
@@ -54,22 +48,6 @@ TwistedMetal.Game.prototype = {
         this.tank = new Tank(this.game, this.bullets);
         // this.enemy = new EnemyTank(1, this.game, this.tank, this.enemyBullets);
  
-        //  The enemies bullet group
-        this.enemyBullets = this.game.add.group();
-        this.enemyBullets.enableBody = true;
-        this.enemyBullets.physicsBodyType = Phaser.Physics.ARCADE;
-        this.enemyBullets.createMultiple(100, 'bullet');
-        
-        this.enemyBullets.setAll('anchor.x', 0.5);
-        this.enemyBullets.setAll('anchor.y', 0.5);
-        this.enemyBullets.setAll('outOfBoundsKill', true);
-        this.enemyBullets.setAll('checkWorldBounds', true);
-
-        // //  Create some baddies to waste :)
-        this.enemies = [];
-
-        this.enemiesTotal = 20;
-        this.enemiesAlive = 20;
 
         // Generate the bad guys.
         // for (var i = 0; i < this.enemiesTotal; i++)
@@ -103,13 +81,25 @@ TwistedMetal.Game.prototype = {
         // this.stage.smoothed = false;
         // this.game.input.onDown.add(this.gofull, this);
         // Websocket on connect handler.
-        this.ws.onopen = function(event) {
-            console.log("in ws.open: " + event.data);
-            // $("#game").append("Connected...");
-            // this.enemies.push(new EnemyTank(1, this.game, this.tank, this.enemyBullets));
-            // this.tank = new Tank(this.game, this.bullets);
-        }
+       //  this.ws.onopen = function() {
+       //      console.log("websocket connection opened");
+       //      // $("#game").append("Connected...");
+       //      // this.enemies.push(new EnemyTank(1, this.game, this.tank, this.enemyBullets));
+       //      // this.tank = new Tank(this.game, this.bullets);
+       //  }
 
+
+
+       //  this.ws.onmessage = function(event) {
+       //      console.log("event received");
+       //      var message = JSON.parse(event.data);
+       //      console.log("message: " + event.message);
+       //      // $("#game").append("Connected...");
+       //      // this.enemies.push(new EnemyTank(1, this.game, this.tank, this.enemyBullets));
+       //      // this.tank = new Tank(this.game, this.bullets);
+       //  }
+
+       // this.ws.send(JSON.stringify({message: "hello"}));
 	},     
 
     // gofull: function() {

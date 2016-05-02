@@ -4,5 +4,6 @@ require ::File.expand_path('../config/environment', __FILE__)
 
 # Require chatbackend.
 use ChatBackend 
+use GameBackend 
 
 run Rails.application

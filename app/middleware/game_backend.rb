@@ -4,7 +4,7 @@ require 'redis'
 require 'json'
 require 'erb'
 
-class ChatBackend 
+class GameBackend 
     KEEPALIVE_TIME = 15 # in seconds
     CHANNEL = "battledome"
 
@@ -36,6 +36,7 @@ class ChatBackend
         end
 
         ws.on :message do |event|
+          # Parse message and broadcast it to each connected client.
           p [:message, event.data]
           #@redis.publish(CHANNEL, sanitize(event.data))
           @clients.each do |client|
