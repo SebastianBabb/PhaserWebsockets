@@ -33,10 +33,6 @@ class GameBackend
             p [:open, ws.object_id]
             p ["Openning Game Websocket"]
             @clients << ws
-            # Add joining player to game.
-            @clients.each do |client|
-              client.send(event.data)
-            end
          end
 
          ws.on :message do |event|

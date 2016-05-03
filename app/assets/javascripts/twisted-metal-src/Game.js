@@ -20,11 +20,10 @@ TwistedMetal.Game = function (game) {
 
 // Add functions to Game prototype.
 TwistedMetal.Game.prototype = {
-
 	create: function () {
         console.log("Game.js");
         // Create a websocket object.
-        // this.ws = new WebSocket(this.uri);
+        this.ws = new WebSocket(this.uri);
 
         //  Resize our game world to be a 2000 x 2000 square
         this.game.world.setBounds(-1000, -1000, 2000, 2000);

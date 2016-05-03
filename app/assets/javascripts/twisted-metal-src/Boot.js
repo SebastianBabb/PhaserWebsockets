@@ -20,7 +20,7 @@ TwistedMetal.Boot = function (game) {
 TwistedMetal.Boot.prototype = {
 
     preload: function () {
-        this.load.image('preloaderBar', '<%= asset_path('twisted-metal/preload.png') %>');
+        this.load.image('preloaderBar', '/twisted-metal/preload.png');
 
     },
 
