@@ -24,9 +24,9 @@ class ChatBackend
     end
 
     def call(env)
-      p "Environment: #{env['PATH_INFO']}"
       # Only load the backend chat server when websocket attempts to connect to */chat
       if env['PATH_INFO'] == '/chat' 
+        p "PATH_INFO: #{env['PATH_INFO']}"
         if Faye::WebSocket.websocket?(env)
           ws = Faye::WebSocket.new(env, nil, {ping: KEEPALIVE_TIME })
           ws.on :open do |event|

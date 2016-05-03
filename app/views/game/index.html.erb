@@ -1,4 +1,8 @@
 <%= stylesheet_link_tag "game" %>
+<%# javascript_include_tag "twisted-metal-src/Boot.js.erb"%>
+<%# javascript_include_tag "chat_lobby.js"%>
+<%= javascript_include_tag *Dir[Rails.root.join("app/assets/javascripts/twisted-metal-src/*.js")] %>
+
 
 <div id="game"></div>
 <div id="orientation"></div>

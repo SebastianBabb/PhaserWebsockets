@@ -7,6 +7,15 @@ Rails.application.config.assets.precompile += %w( lobby.css  )
 Rails.application.config.assets.precompile += %w( logout.css  )
 Rails.application.config.assets.precompile += %w( game.css  )
 
+Rails.application.config.assets.precompile += %w( chat_lobby.js  )
+
+Rails.application.config.assets.precompile += %w( twisted-metal-src/Boot.js )
+Rails.application.config.assets.precompile += %w( twisted-metal-src/Preloader.js )
+Rails.application.config.assets.precompile += %w( twisted-metal-src/MainMenu.js  )
+Rails.application.config.assets.precompile += %w( twisted-metal-src/Game.js  )
+Rails.application.config.assets.precompile += %w( twisted-metal-src/Tank.js  )
+Rails.application.config.assets.precompile += %w( twisted-metal-src/EnemyTank.js  )
+
 # Add additional assets to the asset load path
 # Rails.application.config.assets.paths << Emoji.images_path
 
