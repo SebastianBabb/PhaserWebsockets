@@ -12,7 +12,7 @@ TwistedMetal.Game = function (game) {
     this.bullets;
 
     // Websocket configurations.
-    this.scheme = "ws://";
+    this.scheme = "wss://";
     this.uri = this.scheme + window.document.location.host + "/";
     this.ws;
 };

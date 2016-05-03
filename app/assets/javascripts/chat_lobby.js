@@ -1,6 +1,6 @@
 var ready = function() {
-    var scheme   = "ws://"; // For local.
-    //var scheme   = "wss://"; // For heroku.
+    //var scheme   = "ws://"; // For local.
+    var scheme   = "wss://"; // For heroku.
     var uri      = scheme + window.document.location.host + "/";
     var ws       = new WebSocket(uri);
 
