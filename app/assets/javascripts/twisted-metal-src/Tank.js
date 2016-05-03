@@ -1,5 +1,6 @@
 // Tank Prototype.
-function Tank(game, bullets) {
+function Tank(id, game, bullets) {
+    this.id = id;
     this.game = game;
     this.bullets = bullets;
 
@@ -48,22 +49,37 @@ Tank.prototype.realign = function() {
         this.turret.rotation = this.game.physics.arcade.angleToPointer(this.turret);
 }
 
+// Get tank id.
+Tank.prototype.getID = function() {
+    return this.id;
+} 
+
+// Rotate the tank right.
+Tank.prototype.getAngle = function() {
+    return this.tank.angle;
+} 
+
 // Rotate the tank left.
 Tank.prototype.turnLeft = function() {
-    console.log("turning left");
+    // console.log("turning left");
     this.tank.angle -= 4;
 
 }
 
 // Rotate the tank right.
 Tank.prototype.turnRight = function() {
-    console.log("turning right");
+    // console.log("turning right");
     this.tank.angle += 4;
+} 
+
+// Rotate the tank right.
+Tank.prototype.getAngle = function() {
+    return this.tank.angle;
 } 
 
 // Move the tank forward.
 Tank.prototype.moveForward= function() {
-   console.log("forward");
+   // console.log("forward");
    //  The speed we'll travel at
    this.tank.currentSpeed = 300;
 } 
@@ -83,6 +99,16 @@ Tank.prototype.getSpeed = function() {
     return this.tank.currentSpeed;
 }
 
+// Get the tank's current X positon.
+Tank.prototype.getXPosition= function() {
+    return this.tank.x;
+}
+
+// Get the tank's current Y position.
+Tank.prototype.getYPosition = function() {
+    return this.tank.y;
+}
+
 // Slow down the tank.
 Tank.prototype.reduceSpeed = function() {
     this.tank.currentSpeed -= 4;
@@ -90,12 +116,12 @@ Tank.prototype.reduceSpeed = function() {
 
 // Fire the tanks cannon.
 Tank.prototype.fire = function() {
-    console.log("fire");
+    // console.log("fire");
     // Limit the rate of fire.
     if (this.game.time.now > this.nextFire && this.bullets.countDead() > 0)
     {
 
-        console.log(this.game.time.now + " > " + this.nextFire);
+        // console.log(this.game.time.now + " > " + this.nextFire);
         this.nextFire = this.game.time.now + this.fireRate;
 
         var bullet = this.bullets.getFirstExists(false);
@@ -105,6 +131,6 @@ Tank.prototype.fire = function() {
         bullet.rotation = this.game.physics.arcade.moveToPointer(bullet, 1000, this.game.input.activePointer, 500);
     } else {
         // Cant fire, timeout has not finished.
-        console.log(this.game.time.now +" < " + this.nextFire);
+        // console.log(this.game.time.now +" < " + this.nextFire);
     }
 }

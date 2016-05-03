@@ -8,8 +8,22 @@ TwistedMetal = {
     music: null,
 
     /* Your game can check TwistedMetal.orientated in internal loops to know if it should pause or not */
-    orientated: false
+    orientated: false,
 
+    // Game websocket
+    // scheme: 'ws://',
+    // Ensure the socket uri has /game appended to it so the proper middleware is loaded.
+    uri: 'ws://' + window.document.location.host + '/game',
+
+    ws: null,
+
+    tank: null,
+
+    // Current games running.
+    games: null,
+
+    // Clients connected to the game socket - number of tanks battling.
+    clients: null
 };
 
 // Add boot function to Twistedetal object and pass it an instance of game.
@@ -20,12 +34,13 @@ TwistedMetal.Boot = function (game) {
 TwistedMetal.Boot.prototype = {
 
     preload: function () {
+        console.log("Boot: preload");
         this.load.image('preloaderBar', '/twisted-metal/preload.png');
 
     },
 
     create: function () {
-
+        console.log("Boot: create:");
         this.input.maxPointers = 1;
         this.stage.disableVisibilityChange = true;
 
