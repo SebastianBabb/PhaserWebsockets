@@ -2,13 +2,13 @@
 TwistedMetal = { 
 
     /* Here we've just got some global level vars that persist regardless of State swaps */
-    score: 0,
+    // score: 0,
 
     /* If the music in your game needs to play through-out a few State swaps, then you could reference it here */
-    music: null,
+    // music: null,
 
     /* Your game can check TwistedMetal.orientated in internal loops to know if it should pause or not */
-    orientated: false,
+    // orientated: false,
 
     // Game websocket
     // scheme: 'ws://',
@@ -20,7 +20,7 @@ TwistedMetal = {
     tank: null,
 
     // Current games running.
-    games: null,
+    arenas: null,
 
     // Clients connected to the game socket - number of tanks battling.
     clients: null

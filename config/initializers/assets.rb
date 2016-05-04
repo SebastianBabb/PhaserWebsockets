@@ -7,9 +7,10 @@ Rails.application.config.assets.precompile += %w( lobby.css  )
 Rails.application.config.assets.precompile += %w( logout.css  )
 Rails.application.config.assets.precompile += %w( game.css  )
 
-Rails.application.config.assets.precompile += %w( chat_lobby.js  )
+Rails.application.config.assets.precompile += %w( lobby/chat_lobby.js  )
 
 # Image assets referenced in these js scripts are located in public/twisted-metal
+Rails.application.config.assets.precompile += %w( twisted-metal-src/Arenas.js )
 Rails.application.config.assets.precompile += %w( twisted-metal-src/Boot.js )
 Rails.application.config.assets.precompile += %w( twisted-metal-src/Preloader.js )
 Rails.application.config.assets.precompile += %w( twisted-metal-src/MainMenu.js  )

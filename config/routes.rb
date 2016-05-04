@@ -7,6 +7,8 @@ Rails.application.routes.draw do
 
     get 'lobby/create'
 
+    get 'game', to: 'game#index'
+
     get 'game/index'
 
     devise_for :users

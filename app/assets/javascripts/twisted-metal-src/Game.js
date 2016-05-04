@@ -1,8 +1,6 @@
 // Create TwistedMetal.Game prototype.
 TwistedMetal.Game = function (game) {
-    // Declare class variables.
-    // this.client_id;
-
+    this.id;
     this.game = game;
 
     this.land;  // Background.
@@ -27,7 +25,7 @@ TwistedMetal.Game.prototype = {
         console.log("Game: create");
         // Websocket onopen callback.  Executes once ws connection has been made.
         TwistedMetal.ws.onopen = function() {
-            console.log("Websocket onopen");
+            console.log("Connected to game websocket.  Starting game...");
             // TwistedMetal.ws.send("message sent!");
         }
 
@@ -149,17 +147,30 @@ TwistedMetal.Game.prototype = {
         if (this.cursors.left.isDown)
         {
             TwistedMetal.clients[0].turnLeft();
-            TwistedMetal.ws.send(TwistedMetal.clients[0].getID() + " is turning turning left");
+            TwistedMetal.ws.send(TwistedMetal.clients[0].getID() + " "
+             + TwistedMetal.clients[0].getAngle() + " "
+             + TwistedMetal.clients[0].getSpeed() + " "
+             + TwistedMetal.clients[0].getXPosition() + " "
+             + TwistedMetal.clients[0].getYPosition());
         }
         else if (this.cursors.right.isDown)
         {
             TwistedMetal.clients[0].turnRight();
-            TwistedMetal.ws.send("turning right");
+            TwistedMetal.ws.send(TwistedMetal.clients[0].getID() + " "
+             + TwistedMetal.clients[0].getAngle() + " "
+             + TwistedMetal.clients[0].getSpeed() + " "
+             + TwistedMetal.clients[0].getXPosition() + " "
+             + TwistedMetal.clients[0].getYPosition());
         }
 
         if (this.cursors.up.isDown)
         {
             TwistedMetal.clients[0].moveForward();
+            TwistedMetal.ws.send(TwistedMetal.clients[0].getID() + " "
+             + TwistedMetal.clients[0].getAngle() + " "
+             + TwistedMetal.clients[0].getSpeed() + " "
+             + TwistedMetal.clients[0].getXPosition() + " "
+             + TwistedMetal.clients[0].getYPosition());
         }
         else
         {
@@ -187,6 +198,11 @@ TwistedMetal.Game.prototype = {
         {
             //  Boom!
             TwistedMetal.clients[0].fire();
+            TwistedMetal.ws.send(TwistedMetal.clients[0].getID() + " "
+             + TwistedMetal.clients[0].getAngle() + " "
+             + TwistedMetal.clients[0].getSpeed() + " "
+             + TwistedMetal.clients[0].getXPosition() + " "
+             + TwistedMetal.clients[0].getYPosition());
         }
 	},
 

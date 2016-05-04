@@ -10,7 +10,7 @@ TwistedMetal.Preloader.prototype = {
 	// Load assets.
 	preload: function () {
         console.log("Preloader: preload");
-		this.preloadBar = this.add.sprite(120, 200, '/twisted-metal/preloaderBar');
+		this.preloadBar = this.add.sprite(120, 200, 'preloaderBar');
 		this.load.setPreloadSprite(this.preloadBar);
 		// this.load.image('titlepage', '/missile-command/title-page.png');
 	    this.load.atlas('tank', '/twisted-metal/tanks.png', '/twisted-metal/tanks.json');
@@ -31,6 +31,11 @@ TwistedMetal.Preloader.prototype = {
 		// Start the main menu.
         console.log("Websocket readyState: " + TwistedMetal.ws.readyState);
 		// this.state.start('MainMenu');
+
+		// Wait for the socket to connect, then execute the callback to start the game.
+		// this.waitForSocketConnection(TwistedMetal.ws, function() {
+		// 	console.log("Connected to websocket.  Starting game.")
+		// });
 		this.state.start('Game');
 	},
 
@@ -40,6 +45,27 @@ TwistedMetal.Preloader.prototype = {
 			// this.ready = true;
 			// this.state.start('MainMenu');
 		// }
-	}
+	},
+
+	// waitForSocketConnection: function(websocket, callback) {
+	// 	// Try to connect every 5ms until successful.
+	// 	setTimeout(
+	// 		function() {
+	// 			// Check socket connection.
+	// 			if(websocket.readyState === 1) {
+	// 				console.log("Connected to Websocket.");
+	// 				if(callback != null) {
+	// 					// Execute the callback.
+	// 					callback();
+	// 				}
+	// 				// No callback, so just return.
+	// 				return;
+	// 			} else {
+	// 				console.log("Waiting for socket connection");
+	// 				// Call recursively.
+	// 				waitForSocketConnection(websocket, callback);
+	// 			}
+	// 		}, 5);
+	// }
 
 };
