@@ -15,15 +15,15 @@ TwistedMetal = {
     // Ensure the socket uri has /game appended to it so the proper middleware is loaded.
     uri: 'ws://' + window.document.location.host + '/game',
 
-    ws: null,
-
     tank: null,
 
     // Current games running.
     arenas: null,
 
     // Clients connected to the game socket - number of tanks battling.
-    clients: null
+    game: null,
+
+    bullets: null
 };
 
 // Add boot function to Twistedetal object and pass it an instance of game.

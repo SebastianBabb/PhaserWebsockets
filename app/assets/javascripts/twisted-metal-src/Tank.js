@@ -1,8 +1,9 @@
 // Tank Prototype.
-function Tank(id, game, bullets) {
+function Tank(id, game, bullets, follow) {
     this.id = id;
     this.game = game;
     this.bullets = bullets;
+    this.follow = follow;
 
     this.health = 3;
     this.fireRate = 100;
@@ -34,7 +35,15 @@ function Tank(id, game, bullets) {
     this.turret.bringToTop();
 
     // Set the camera to follow the tank, so it can not drive out of user view.
-    this.game.camera.follow(this.tank);
+    if(follow) {
+        this.game.camera.follow(this.tank);
+    }   
+}
+
+Tank.prototype.remove = function() {
+    this.tank.kill();
+    this.turret.kill();
+    this.shadow.kill();
 }
 
 // Realign all of the tanks parts. Called every update.
@@ -76,6 +85,7 @@ Tank.prototype.turnRight = function() {
 Tank.prototype.getAngle = function() {
     return this.tank.angle;
 } 
+
 
 // Move the tank forward.
 Tank.prototype.moveForward= function() {

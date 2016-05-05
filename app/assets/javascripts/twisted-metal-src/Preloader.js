@@ -26,10 +26,10 @@ TwistedMetal.Preloader.prototype = {
         console.log("Preloader: create");
         // Connect to game websocket.
         console.log("Connecting to game websocket");
-        TwistedMetal.ws = new WebSocket(TwistedMetal.uri);
+        //TwistedMetal.ws = new WebSocket(TwistedMetal.uri);
 		this.preloadBar.cropEnabled = false;
 		// Start the main menu.
-        console.log("Websocket readyState: " + TwistedMetal.ws.readyState);
+        //console.log("Websocket readyState: " + TwistedMetal.ws.readyState);
 		// this.state.start('MainMenu');
 
 		// Wait for the socket to connect, then execute the callback to start the game.
