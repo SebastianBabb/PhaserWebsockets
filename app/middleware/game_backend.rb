@@ -9,16 +9,17 @@ require_relative '../models/tank.rb'
 
 class GameBackend 
     CREATE_CLIENT = 0;
-    UPDATE_CLIENT = 1;
-    DELETE_CLIENT = 2;
+    ADD_CLIENT    = 1
+    UPDATE_CLIENT = 2;
+    DELETE_CLIENT = 3;
 
     KEEPALIVE_TIME = 15 # in seconds
     CHANNEL = "battledome"
 
     def initialize(app)
       @app     = app
-      @clients = [] # Connected clients.
-      @tanks = []   # Tanks of associated clients.
+      @clients = [] # Connected websockets.
+      @tanks = Hash.new   # Tanks associated with clients..
     end
 
     def call(env)
@@ -27,72 +28,91 @@ class GameBackend
       if env['PATH_INFO'] == '/game' 
         if Faye::WebSocket.websocket?(env)
           ws = Faye::WebSocket.new(env, nil, {ping: KEEPALIVE_TIME })
+          # Socket connection opened.
           ws.on :open do |event|
-            #p [:open, ws.object_id]
-            p ["Openning Game Websocket"]
-            @clients << ws
-            # Add new client's tank to the tanks array.
-            @tanks << Tank.new(ws.object_id) # client's websocket objet id is the tank id.
-            #@tanks << Tank.new(@clients.length-1) # client's index is tank id.
-            
-            # Each existing client should only be updated with the newest client's
-            # tank, as they already have representations of every other client's tank.
-            # The newest client, however, will need to be sent every existing clients
-            # tank, as it has just joined the game.
-            #
-            # Iterate through the clients, checking for the newest one (last client in the array)
-            @clients.each_with_index do |client, client_number|
-                # If an existing client (ie. not the newest client), add only the newest tank.
-                if client != @clients[-1]
-                    # The newest tank is the last one in the tanks array.
-                    p ["Client: #{client_number} Adding tank: #{@tanks[-1].id}"]
-                    client.send(@tanks[-1].jsonify(CREATE_CLIENT))
-                else
-                    # Add all of the tanks to the newest client.
-                    @tanks.each do |tank|
-                        p ["Client: #{client_number} Adding tank: #{tank.id}"]
-                        client.send(tank.jsonify(CREATE_CLIENT))
-                    end
-                end
+            p "*Open Game Websocket: #{ws.object_id}"
+            # Create the connecting client's tank object.
+            tank = Tank.new(ws.object_id) 
+            # Send the new client its tank.
+            ws.send(tank.jsonify(CREATE_CLIENT))
+
+            # Iterate over the connected clients and send them the connecting client's tank.
+            @clients.each do |client|
+                sleep(1)
+                # Send the new client's tank data...
+                client.send(tank.jsonify(ADD_CLIENT))
+                # May as well send this client's tank to the new client now...
+                ws.send(@tanks[client.object_id].jsonify(ADD_CLIENT)) # client's object ids are also the tank's ids.
             end
-            
+
+            # Store the new clients websocket and tank.
+            @clients << ws
+            @tanks[ws.object_id] = tank
+
             # Debug output.
-            p ["Number of clients: #{@clients.length}"]
-            p ["Number of tanks: #{@tanks.length}"]
+            p "=== Clients ==="
+            @clients.each do |client|
+                p client.object_id
+            end
+            p "Number of clients: #{@clients.length}"
+            p "=== Tanks ==="
+            @tanks.each do |tank|
+                p tank
+            end
+            p "Number of tanks: #{@tanks.length}"
          end
 
          ws.on :message do |event|
             # Parse message and broadcast it to each connected client.
             p [:message, event.data]
 
+
+            # UPDATE THE CLIENTS.
+
             # This is where we will parse the tank data sent from the client,
             # use it to update each tank in the tanks array, and then broadcast
             # the results back to each connected client.
 
             # Update the clients.
-            @clients.each do |client|
-                @tanks.each do |tank|
-                    #p ["Tank ID: #{tank.id}"]
-                    client.send(tank.jsonify(UPDATE_CLIENT))
-                end
-            end
+            #@clients.each do |client|
+                #@tanks.each do |tank|
+                    ##p ["Tank ID: #{tank.id}"]
+                    #client.send(tank.jsonify(UPDATE_CLIENT))
+                #end
+            #end
          end
 
          ws.on :close do |event|
-            p [:close, ws.object_id, event.code, event.reason]
-            p ["Closing Game Websocket"]
-            @clients.delete(ws)
-            @tanks.delete(get_tank_by_id(ws.object_id))
-            p ["Number of clients: #{@clients.length}"]
-            p ["Number of tanks: #{@tanks.length}"]
-            ws = nil
-            # Broadcast client's removal.
-            @clients.each do |client|
-                @tanks.each do |tank|
-                    #p ["Tank ID: #{tank.id}"]
-                    client.send(tank.jsonify(DELETE_CLIENT))
-                end
+            p "*Close Game Websocket: #{ws.object_id}"
+
+            # Remove the socket from the clients list.
+            @clients.delete_if do | client | 
+                # Compare the client to the current ws object.
+                client == ws
             end
+
+            # Broadcast the client's removal to all other clients.
+            @clients.each do |client|
+                client.send(@tanks[ws.object_id].jsonify(DELETE_CLIENT))
+            end
+
+            # Remove the tank the hash using its socket id.
+            @tanks.delete(ws.object_id)
+
+            # Set the socket to nil. 
+            ws = nil
+
+            # Debug output.
+            p "=== Clients ==="
+            @clients.each do |client|
+                p client.object_id
+            end
+            p "Number of clients: #{@clients.length}"
+            p "=== Tanks ==="
+            @tanks.each do |tank|
+                p tank
+            end
+            p "Number of tanks: #{@tanks.length}"
          end
 
         # Return async Rack response

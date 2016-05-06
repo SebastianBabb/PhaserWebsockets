@@ -1,9 +1,10 @@
 // Create TwistedMetal.Game prototype.
 TwistedMetal.Game = function (game) {
-    this.client_id;     // The id of the client controlling the instance.
     this.clients = new Object();  // Remotely connected clients ids.
+    this.tank;
 
     this.create_client = false;
+    this.add_client = false;
     this.update_client = false;
     this.delete_client = false;
 
@@ -11,49 +12,61 @@ TwistedMetal.Game = function (game) {
 
     this.land;  // Background.
 
-
     this.explosions;
 
     this.cursors;
 
     this.bullets;
 
-    this.server_message;
+    this.message_queue = []; // Holds messages sent from the server in the order recieved.
 
     this.ws = new WebSocket(TwistedMetal.uri);
 
-    // Implement websocket callback. onopen, onmessage...
+    // Implemenf(this.create_client) {
+    //                     this.add_client = true;    
+    //                                         this.create_client = false;
+    //                                                         } else {
+    //                                                                             this.create_client = true;
+    //                                                                                             }
+    //                                                                                                             // Race condition fix.
+    //
+    //                                                         }
+    // }t websocket callback. onopen, onmessage...
     this.ws.addEventListener("open", function(event) {
         // Initial connection has been made.
         console.log("Connected to game websocket.  Starting game...");
-        console.log("onOpen: " + event);
     });
 
     this.ws.addEventListener("message", function(event) {
         // Parse the incoming JSON.
-        console.log("Event: " + event.data);
-        // Get the json sent from the server.
-        this.server_message = JSON.parse(event.data);
-        // Check if clients is not empty and if it contains the tank id sent by the server.
-        // Check json action parameter (CREATE_CLIENT, UPDATE_CLIENT, DELETE_CLIENT).
-        switch(this.server_message.action) {
+        console.log("message: " + event.data);
+        // Push the message sent from the server to message queue.
+        this.message_queue.push(JSON.parse(event.data));
+        // Check json action parameter (CREATE_CLIENT, UPDATE_CLIENT, DELETE_CLIENT)
+        // of the first message in the message queue.
+        switch(this.message_queue[0].action) {
             case 0:
                 // CREATE_CLIENT
-                console.log("CREATE_CLIENT");
+                console.log("CREATE_CLIENT = TRUE");
                 this.create_client = true;
                 break;
             case 1:
-                // UPDATE CLIENT
-                console.log("UPDATE_CLIENT");
-                this.update_client = true;
+                // ADD CLIENT
+                console.log("ADD_CLIENT = TRUE");
+                this.add_client = true;
                 break;
             case 2:
+                // UPDATE CLIENT
+                console.log("UPDATE_CLIENT = TRUE");
+                this.update_client = true;
+                break;
+            case 3:
                 // DELETE CLIENT
-                console.log("DELETE_CLIENT");
+                console.log("DELETE_CLIENT = TRUE");
                 this.delete_client = true;
                 break;
         } 
-        //if(0 < Object.keys(this.clients).length && this.clients[this.server_message.id] == null){
+        //if(0 < Object.keys(this.clients).length && this.clients[this.message_queue.id] == null){
             //// Check 
             //// Clients did not have a record of this client. Add it.
 
@@ -86,7 +99,7 @@ TwistedMetal.Game.prototype = {
 	create: function () {
         console.log("Game: create");
 
-        this.client_id = this.server_message.id;
+        //this.client_id = this.message_queue.id;
 
         //  Resize our game world to be a 2000 x 2000 square
         this.game.world.setBounds(-1000, -1000, 2000, 2000);
@@ -106,19 +119,19 @@ TwistedMetal.Game.prototype = {
         this.bullets.setAll('anchor.y', 0.5);
         this.bullets.setAll('outOfBoundsKill', true);
         this.bullets.setAll('checkWorldBounds', true);
-
-        // Create the tank.
-        console.log("CREATE: CREATING CLIENT: " + this.client_id);
-        this.tank = new Tank(this.client_id, this.game, this.bullets, true);
-        this.clients[this.tank.id] = this.tank;
-        //this.tank = new Tank(this.client_id, this.game, this.bullets, true);
- 
-
-        // Generate the bad guys.
-        // for (var i = 0; i < this.enemiesTotal; i++)
-        // {
-        //     this.enemies.push(new EnemyTank(i, this.game, this.tank, this.enemyBullets));
-        // }
+        
+        // Create the user's tank.
+        if(this.create_client) {
+            if(0 < this.message_queue.length) {
+                // Get the server message from the queue.
+                new_tank = this.message_queue.shift();
+                console.log("CREATING CLIENT: " + new_tank.id);
+                // Create the tank with set camera follow true - last param.
+                this.tank = new Tank(new_tank.id, this.game, this.bullets, true);
+                this.clients[this.tank.id] = this.tank;
+                this.create_client = false;
+            }    
+        }
 
 
         //  Explosion pool
@@ -143,35 +156,7 @@ TwistedMetal.Game.prototype = {
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
 
-        // this.stage.smoothed = false;
-        // this.game.input.onDown.add(this.gofull, this);
-        // Websocket on connect handler.
-       //  this.ws.onopen = function() {
-       //      console.log("websocket connection opened");
-       //      // $("#game").append("Connected...");
-       //      // this.enemies.push(new EnemyTank(1, this.game, this.tank, this.enemyBullets));
-       //      // this.tank = new Tank(this.game, this.bullets);
-       //  }
-
-
-
-
-        
-        //
-       // this.ws.send(JSON.stringify({message: "hello"}));
 	},     
-    // gofull: function() {
-
-    //     if (this.game.scale.isFullScreen)
-    //     {
-    //         this.game.scale.stopFullScreen();
-    //     }
-    //     else
-    //     {
-    //         this.game.scale.startFullScreen(false);
-    //     }
-
-    // },
 
     // removeLogo: function() {
     //     this.game.input.onDown.remove(this.removeLogo, this);
@@ -179,27 +164,46 @@ TwistedMetal.Game.prototype = {
 
     // },
 
+    // Update client.
 	update: function () {
-        // Create a new client.
-        if(this.create_client) {
-            console.log("Tank object: " + this.clients[this.server_message.id]);
-            // If the new client does not exist in the client hash, add it.
-            if(this.clients[this.server_message.id] == null) {
-                console.log("UPDATE: CREATING CLIENT: " + this.server_message.id + " !== " + this.client_id);
-                // Add client to the hash.
-                this.clients[this.server_message.id] = new Tank(this.server_message.id, this.game, this.bullets, false);
-                // Toggle the create client flag back to false.
-                this.create_client = false;
-            }   
+        // Add a new client.
+        if(this.add_client) {
+            // Check that there are message to process.
+            if(0 < this.message_queue.length) {
+                // Get the message from the head of the queue.
+                add_tank = this.message_queue.shift();
+
+                // Create and add the tank to the tank hash.
+                this.clients[add_tank.id] = new Tank(add_tank.id, this.game, this.bullets, false);
+
+                // Toggle flag back to false.
+                this.add_client = false;
+
+                // Log event.
+                console.log("ADDING CLIENT: " + add_tank.id);
+                console.log("ADD_CLIENT = FALSE");
+            }
         }
 
+        // Delete client.
         if(this.delete_client) {
-            console.log("Delete tank id: " + this.clients[this.server_message.id]);
+            // Check that there are message to process.
+            if(0 < this.message_queue.length) {
+                // Get the message from the head of the queue.
+                delete_tank = this.message_queue.shift();
 
-            this.clients[this.server_message.id].remove();
-            delete this.clients[this.server_message.id];
+                // Remove the tank sprite from game play.
+                this.clients[delete_tank.id].remove();
+                
+                // Delete the tank from the tanks hash.
+                delete this.clients[delete_tank.id];
 
-            this.delete_client = false;
+                // Toggle flag back to false.
+                this.delete_client = false;
+
+                // Log event.
+                console.log("DELETING CLIENT: " + delete_tank.id);
+            }   
         }
 
         // this.game.physics.arcade.overlap(this.enemyBullets, this.tank, this.bulletHitPlayer, null, this);
@@ -217,6 +221,7 @@ TwistedMetal.Game.prototype = {
         //     }
         // }
 
+        // Cursor.
         if (this.cursors.left.isDown)
         {
             this.tank.turnLeft();
@@ -315,8 +320,7 @@ TwistedMetal.Game.prototype = {
         this.game.debug.text('Y: ' + this.tank.getYPosition().toString().slice(0,6), 32, 64);
         this.game.debug.text('Angle: ' + this.tank.getAngle(), 32, 96);
         this.game.debug.text('Speed: ' + this.tank.getSpeed(), 32, 128);
-        this.game.debug.text('Clients: ' + Object.keys(this.clients).length, 32, 160);
-        this.game.debug.text('Client ID: ' + this.client_id, 32, 192);
-        this.game.debug.text('Tank ID: ' + this.tank.id, 32, 224);
+        this.game.debug.text('Tank ID: ' + this.tank.id, 32, 160);
+        this.game.debug.text('Clients: ' + Object.keys(this.clients).length, 32, 192);
     },
 };

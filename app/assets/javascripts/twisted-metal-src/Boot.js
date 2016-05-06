@@ -15,7 +15,7 @@ TwistedMetal = {
     // Ensure the socket uri has /game appended to it so the proper middleware is loaded.
     uri: 'ws://' + window.document.location.host + '/game',
 
-    tank: null,
+    //tank: null,
 
     // Current games running.
     arenas: null,
@@ -40,7 +40,7 @@ TwistedMetal.Boot.prototype = {
     },
 
     create: function () {
-        console.log("Boot: create:");
+        console.log("Boot: create");
         this.input.maxPointers = 1;
         this.stage.disableVisibilityChange = true;
 
