@@ -38,7 +38,6 @@ class GameBackend
 
             # Iterate over the connected clients and send them the connecting client's tank.
             @clients.each do |client|
-                sleep(1)
                 # Send the new client's tank data...
                 client.send(tank.jsonify(ADD_CLIENT))
                 # May as well send this client's tank to the new client now...
