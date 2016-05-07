@@ -63,34 +63,29 @@ class GameBackend
 
          # Handle receieved messages.
          ws.on :message do |event|
-            # Parse message and broadcast it to each connected client.
             p [:message, event.data]
 
-            # Parse the event data.
+            # Parse the tank json into a hash
+            tank_json = JSON.parse(event.data) # return a hash
 
-            # Send the updated tank model to each each client.
+            # Use the tank id to get the tank object.
+            tank = @tanks[tank_json["id"]]
 
-            # This is where we will parse the tank data sent from the client,
-            # use it to update each tank in the tanks array, and then broadcast
-            # the results back to each connected client.
+            # Updat the tank object.
+            tank.x_pos = tank_json["x_pos"]
+            tank.y_pos = tank_json["y_pos"]
+            tank.angle = tank_json["angle"]
+            tank.speed = tank_json["speed"]
+                
+            # Broadcast the update to all of the clients.
+            @clients.each do |client|
+                # Ignore the client that sent the message, it is already up to date.
+                if client != ws
+                    # Send the tank as a json with the UPDATE_CLIENT message.
+                    client.send(tank.jsonify(UPDATE_CLIENT))
+                end
+            end
 
-            # Update the clients.
-            #@clients.each do |client|
-                #@tanks.each do |tank|
-                    ##p ["Tank ID: #{tank.id}"]
-                    #client.send(tank.jsonify(UPDATE_CLIENT))
-                #end
-            #end
-            #p "=== Clients ==="
-            #@clients.each do |client|
-                #p client.object_id
-            #end
-            #p "Number of clients: #{@clients.length}"
-            #p "=== Tanks ==="
-            #@tanks.each do |tank|
-                #p tank
-            #end
-            #p "Number of tanks: #{@tanks.length}"
          end
 
          ws.on :close do |event|

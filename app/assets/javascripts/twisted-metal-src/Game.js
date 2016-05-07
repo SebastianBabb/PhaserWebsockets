@@ -87,10 +87,13 @@ TwistedMetal.Game.prototype = {
                 new_tank = this.message_queue.shift();
 
                 // Create the tank with set camera follow true - last param.
-                x = 50;
-                y = 50;
-                speed = 0;
-                this.tank = new Tank(new_tank.id, x, y, speed, this.game, this.bullets, true);
+                var x = 50;
+                var y = 50;
+                var speed = 0;
+                var angle = 90;
+                var health = 3;
+                var follow = true;
+                this.tank = new Tank(new_tank.id, x, y, angle, speed, health, follow, this.game, this.bullets);
                 this.clients[this.tank.id] = this.tank;
                 this.create_client = false;
                 
@@ -164,10 +167,13 @@ TwistedMetal.Game.prototype = {
                 add_tank = this.message_queue.shift();
 
                 // Create and add the tank to the tank hash.
-                x = -100;
-                y = -100;
-                speed = 0;
-                this.clients[add_tank.id] = new Tank(add_tank.id, x, y, speed, this.game, this.bullets, false);
+                var x = -100;
+                var y = -100;
+                var speed = 0;
+                var angle = 0;
+                var health = 3;
+                var follow = false;
+                this.clients[add_tank.id] = new Tank(add_tank.id, x, y, angle, speed, health, follow, this.game, this.bullets);
 
                 // Toggle flag back to false.
                 this.add_client = false;
@@ -184,6 +190,46 @@ TwistedMetal.Game.prototype = {
             if(0 < this.message_queue.length) {
                 // Log event.
                 console.log("UPDATING CLIENT");
+                // Update values.
+                tank_update = this.message_queue.shift();
+
+                // Tank to update.
+                tank = this.clients[tank_update.id];
+                tank.setAngle(tank_update.angle);
+                tank.setSpeed(tank_update.speed);
+
+                //console.log(tank);
+                //console.log("getSpeed(): " + tank.getSpeed());
+
+                // Process update.
+                //var tank_update = this.message_queue.shift();
+                
+                console.log("id: " + tank.id);
+                console.log("x_pos: " + tank.x_pos);
+                console.log("y_pos: " + tank.y_pos);
+                console.log("angle: " + tank.angle);
+                console.log("speed: " + tank.getSpeed());
+                console.log("health: " + tank.health);
+
+                console.log("rotation: " + tank.getRotation());
+                console.log("velocity: " + tank.getVelocity());
+                //for(var param in tank_update) {
+                    //if(tank[param] != tank_update[param]) {
+                        ////console.log(tank[param] + "!= " + tank_update[param]);
+                        //tank[param] = tank_update[param];
+                    //}
+                //}
+
+
+                // Update the physics.
+                // Set the tanks rotation, speed, and point.
+                this.game.physics.arcade.velocityFromRotation(tank.getRotation(),
+                                                              tank.getSpeed(),
+                                                              tank.getVelocity());
+
+                tank.realign();
+                // Toggle flag back to false.
+                this.update_client = false;
             }
         }
 
@@ -258,7 +304,8 @@ TwistedMetal.Game.prototype = {
         {
             //console.log("update speed");
             // Set the tanks rotation, speed, and point.
-            this.game.physics.arcade.velocityFromRotation(this.tank.rotation(), this.tank.getSpeed(), this.tank.velocity());
+            this.game.physics.arcade.velocityFromRotation(this.tank.getRotation(), this.tank.getSpeed(), this.tank.getVelocity());
+
             // Send the tanks instance as a json to the server.
             //this.ws.send(this.tank.jsonify());
         }
