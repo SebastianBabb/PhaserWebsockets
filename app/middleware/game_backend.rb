@@ -49,24 +49,26 @@ class GameBackend
             @tanks[ws.object_id] = tank
 
             # Debug output.
-            p "=== Clients ==="
-            @clients.each do |client|
-                p client.object_id
-            end
+            #p "=== Clients ==="
+            #@clients.each do |client|
+                #p client.object_id
+            #end
             p "Number of clients: #{@clients.length}"
-            p "=== Tanks ==="
-            @tanks.each do |tank|
-                p tank
-            end
+            #p "=== Tanks ==="
+            #@tanks.each do |tank|
+                #p tank
+            #end
             p "Number of tanks: #{@tanks.length}"
          end
 
+         # Handle receieved messages.
          ws.on :message do |event|
             # Parse message and broadcast it to each connected client.
             p [:message, event.data]
 
+            # Parse the event data.
 
-            # UPDATE THE CLIENTS.
+            # Send the updated tank model to each each client.
 
             # This is where we will parse the tank data sent from the client,
             # use it to update each tank in the tanks array, and then broadcast
@@ -79,6 +81,16 @@ class GameBackend
                     #client.send(tank.jsonify(UPDATE_CLIENT))
                 #end
             #end
+            #p "=== Clients ==="
+            #@clients.each do |client|
+                #p client.object_id
+            #end
+            #p "Number of clients: #{@clients.length}"
+            #p "=== Tanks ==="
+            #@tanks.each do |tank|
+                #p tank
+            #end
+            #p "Number of tanks: #{@tanks.length}"
          end
 
          ws.on :close do |event|
@@ -103,14 +115,14 @@ class GameBackend
 
             # Debug output.
             p "=== Clients ==="
-            @clients.each do |client|
-                p client.object_id
-            end
+            #@clients.each do |client|
+                #p client.object_id
+            #end
             p "Number of clients: #{@clients.length}"
-            p "=== Tanks ==="
-            @tanks.each do |tank|
-                p tank
-            end
+            #p "=== Tanks ==="
+            #@tanks.each do |tank|
+                #p tank
+            #end
             p "Number of tanks: #{@tanks.length}"
          end
 

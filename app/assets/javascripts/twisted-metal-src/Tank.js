@@ -1,6 +1,9 @@
 // Tank Prototype.
-function Tank(id, game, bullets, follow) {
+function Tank(id, x, y, speed, game, bullets, follow) {
     this.id = id;
+    this.x = x;
+    this.y = y;
+    this.currentSpeed = speed;
     this.game = game;
     this.bullets = bullets;
     this.follow = follow;
@@ -8,28 +11,27 @@ function Tank(id, game, bullets, follow) {
     this.health = 3;
     this.fireRate = 100;
     this.nextFire = 0;
-    this.currentSpeed = 0;
     this.alive = true;
 
     //  The base of our tank.
-    this.tank = this.game.add.sprite(0, 0, 'tank', 'tank1');
+    this.tank = this.game.add.sprite(this.x, this.y, 'tank', 'tank1');
     this.tank.anchor.setTo(0.5, 0.5);
     this.tank.animations.add('move', ['tank1', 'tank2', 'tank3', 'tank4', 'tank5', 'tank6'], 20, true);
 
+    // The tank turret.
+    this.turret = this.game.add.sprite(this.x, this.y, 'tank', 'turret');
+    this.turret.anchor.setTo(0.3, 0.5);
+
+    // The shadow under the tank.
+    this.shadow = this.game.add.sprite(this.x, this.y, 'tank', 'shadow');
+    this.shadow.anchor.setTo(0.5, 0.5);
+    
     //  Apply physics to the tank.  Limit its speed and slow it down
     // when not under under power.
     this.game.physics.enable(this.tank, Phaser.Physics.ARCADE);
     this.tank.body.drag.set(0.2);
     this.tank.body.maxVelocity.setTo(400, 400);
     this.tank.body.collideWorldBounds = true;
-
-    // The tank turret.
-    this.turret = this.game.add.sprite(0, 0, 'tank', 'turret');
-    this.turret.anchor.setTo(0.3, 0.5);
-
-    // The shadow under the tank.
-    this.shadow = this.game.add.sprite(0, 0, 'tank', 'shadow');
-    this.shadow.anchor.setTo(0.5, 0.5);
 
     this.tank.bringToTop();
     this.turret.bringToTop();
@@ -143,4 +145,8 @@ Tank.prototype.fire = function() {
         // Cant fire, timeout has not finished.
         // console.log(this.game.time.now +" < " + this.nextFire);
     }
+}
+
+Tank.prototype.jsonify = function() {
+    return JSON.stringify({id: this.id, x: this.tank.x, y: this.tank.y, speed: this.tank.currentSpeed});
 }
