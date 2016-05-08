@@ -1,6 +1,5 @@
 // Create TwistedMetal.Game prototype.
 TwistedMetal.Game = function (game) {
-    this.connected = false;
     this.clients = new Object();  // Remotely connected clients ids.
     this.tank;
 
@@ -30,7 +29,6 @@ TwistedMetal.Game = function (game) {
     this.ws.addEventListener("open", function(event) {
         // Log connection status.
         console.log("Connected to game websocket.  Starting game...");
-        this.connected = true;
     });
 
     // Websocket on message recieved event handler. 
@@ -175,7 +173,7 @@ TwistedMetal.Game.prototype = {
         //console.log("this.delete_client: " + this.delete_client);
 
         // Add a new client.
-        if(this.add_client && this.connected) {
+        if(this.add_client) {
             // Check that there are message to process.
             if(0 < this.message_queue.length) {
                 // Get the message from the head of the queue.
@@ -200,7 +198,7 @@ TwistedMetal.Game.prototype = {
         }
         
         // Add a new client.
-        if(this.update_client && this.connected) {
+        if(this.update_client) {
         console.log("WS ReadyState: " + this.ws.readyState);
             // Check that there are message to process.
             if(0 < this.message_queue.length) {
@@ -250,7 +248,7 @@ TwistedMetal.Game.prototype = {
         }
 
         // Delete a client.
-        if(this.delete_client && this.connected) {
+        if(this.delete_client) {
             // Check that there are message to process.
             if(0 < this.message_queue.length) {
                 // Get the message from the head of the queue.
