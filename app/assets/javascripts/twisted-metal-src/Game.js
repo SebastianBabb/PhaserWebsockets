@@ -59,11 +59,11 @@ TwistedMetal.Game.prototype = {
 	create: function () {
         // Log status.
         console.log("Game: create");
+        console.log("WS ReadyState: " + this.ws.readyState);
 
-
-        while(this.ws.readyState == 0) {
-            setTimeout(console.log("Waiting on connection: " + this.ws.readyState), 100)
-        }
+        //while(this.ws.readyState == 0) {
+            //setTimeout(console.log("Waiting on connection: " + this.ws.readyState), 100)
+        //}
 
         //  Resize the game world to be a 2000 x 2000 square
         this.game.world.setBounds(-1000, -1000, 2000, 2000);
@@ -194,6 +194,7 @@ TwistedMetal.Game.prototype = {
         
         // Add a new client.
         if(this.update_client) {
+        console.log("WS ReadyState: " + this.ws.readyState);
             // Check that there are message to process.
             if(0 < this.message_queue.length) {
                 // Log event.
