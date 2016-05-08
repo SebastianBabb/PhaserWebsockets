@@ -211,7 +211,7 @@ TwistedMetal.Game.prototype = {
                 console.log("x_pos: " + tank.x_pos);
                 console.log("y_pos: " + tank.y_pos);
                 console.log("angle: " + tank.angle);
-                console.log("speed: " + tank.getSpeed());
+                console.log("speed: " + tank.speed;
                 console.log("health: " + tank.health);
 
                 console.log("rotation: " + tank.getRotation());
