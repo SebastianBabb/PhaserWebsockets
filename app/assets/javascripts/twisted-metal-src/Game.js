@@ -167,6 +167,11 @@ TwistedMetal.Game.prototype = {
             } 
         }
 
+        console.log("this.create_cliente: " + this.create_client);
+        console.log("this.add_client: " + this.add_client);
+        console.log("this.update_client: " + this.update_client);
+        console.log("this.delete_client: " + this.delete_client);
+
         // Add a new client.
         if(this.add_client) {
             // Check that there are message to process.
