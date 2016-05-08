@@ -60,6 +60,10 @@ TwistedMetal.Game.prototype = {
         // Log status.
         console.log("Game: create");
 
+        while(this.ws.readyState == 0) {
+            setTimeout(console.log("Websocket Connected."), 1000)
+        }
+
         //  Resize the game world to be a 2000 x 2000 square
         this.game.world.setBounds(-1000, -1000, 2000, 2000);
 
