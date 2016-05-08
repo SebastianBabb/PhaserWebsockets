@@ -146,8 +146,6 @@ TwistedMetal.Game.prototype = {
     // existing tank from the game space.  Which action to perform is
     // specified by in the message recieved by from the server.
 	update: function () {
-        if(this.connected) {
-            
         console.log("update");
         // Ensure that the queue is not empty.
         if(0 < this.message_queue.length) {
@@ -177,7 +175,7 @@ TwistedMetal.Game.prototype = {
         //console.log("this.delete_client: " + this.delete_client);
 
         // Add a new client.
-        if(this.add_client) {
+        if(this.add_client && this.connected) {
             // Check that there are message to process.
             if(0 < this.message_queue.length) {
                 // Get the message from the head of the queue.
@@ -202,7 +200,7 @@ TwistedMetal.Game.prototype = {
         }
         
         // Add a new client.
-        if(this.update_client) {
+        if(this.update_client && this.connected) {
         console.log("WS ReadyState: " + this.ws.readyState);
             // Check that there are message to process.
             if(0 < this.message_queue.length) {
@@ -252,7 +250,7 @@ TwistedMetal.Game.prototype = {
         }
 
         // Delete a client.
-        if(this.delete_client) {
+        if(this.delete_client && this.connected) {
             // Check that there are message to process.
             if(0 < this.message_queue.length) {
                 // Get the message from the head of the queue.
@@ -342,8 +340,6 @@ TwistedMetal.Game.prototype = {
             this.tank.fire();
                 // Send the tanks instance as a json to the server.
                 this.ws.send(this.tank.jsonify());
-        }
-
         }
 	},
 
