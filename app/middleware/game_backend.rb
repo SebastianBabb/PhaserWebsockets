@@ -13,7 +13,7 @@ class GameBackend
     UPDATE_CLIENT = 2;
     DELETE_CLIENT = 3;
 
-    KEEPALIVE_TIME = 15 # in seconds
+    KEEPALIVE_TIME = 1 # in seconds
     CHANNEL = "battledome"
 
     def initialize(app)
