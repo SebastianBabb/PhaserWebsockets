@@ -82,6 +82,7 @@ TwistedMetal.Game.prototype = {
         
         // Create the user's tank.
         if(this.create_client) {
+            console.log("create client");
             // Ensure that the queue is not empty.
             if(0 < this.message_queue.length) {
                 // Get the server message from the queue.
@@ -138,6 +139,7 @@ TwistedMetal.Game.prototype = {
     // existing tank from the game space.  Which action to perform is
     // specified by in the message recieved by from the server.
 	update: function () {
+        console.log("update");
         // Ensure that the queue is not empty.
         if(0 < this.message_queue.length) {
             // Determine which action to perform.
