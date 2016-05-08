@@ -22,7 +22,10 @@ TwistedMetal.Game = function (game) {
 
     this.message_queue = []; // Holds messages sent from the server in the order recieved.
 
-    this.ws = new WebSocket(TwistedMetal.uri);
+    //this.ws = new WebSocket(TwistedMetal.uri);
+    var scheme   = "ws://"; // For heroku.
+    var uri = scheme + window.document.location.host + "/game";
+    this.ws = new WebSocket(uri);
 
     // Websocket onopen event handler. 
     this.ws.addEventListener("open", function(event) {

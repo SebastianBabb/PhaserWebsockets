@@ -6,7 +6,7 @@ var ready = function() {
     if(window.document.location.pathname === "/lobby/index") {
         console.log("Opening chat websocket.");
         //var scheme   = "ws://"; // For local.
-        var scheme   = "wss://"; // For heroku.
+        var scheme   = "ws://"; // For heroku.
         var uri = scheme + window.document.location.host + "/chat";
         ws = new WebSocket(uri);
 
