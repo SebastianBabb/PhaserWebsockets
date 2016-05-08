@@ -13,7 +13,7 @@ TwistedMetal = {
     // Game websocket
     // scheme: 'ws://',
     // Ensure the socket uri has /game appended to it so the proper middleware is loaded.
-    uri: 'ws://' + window.document.location.host + '/game',
+    uri: 'wss://' + window.document.location.host + '/game',
 
     //tank: null,
 
