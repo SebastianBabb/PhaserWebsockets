@@ -246,7 +246,7 @@ TwistedMetal.Game.prototype = {
                 // Remove the tank sprite from game play.
                 this.clients[delete_tank.id].remove();
                 
-                this.clients[delete_tank.id] = null;
+                //this.clients[delete_tank.id] = null;
                 
                 // Delete the tank from the tanks hash.
                 delete this.clients[delete_tank.id];
