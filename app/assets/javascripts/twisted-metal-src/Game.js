@@ -1,5 +1,6 @@
 // Create TwistedMetal.Game prototype.
 TwistedMetal.Game = function (game) {
+    this.connected = false;
     this.clients = new Object();  // Remotely connected clients ids.
     this.tank;
 
@@ -29,6 +30,7 @@ TwistedMetal.Game = function (game) {
     this.ws.addEventListener("open", function(event) {
         // Log connection status.
         console.log("Connected to game websocket.  Starting game...");
+        this.connected = true;
     });
 
     // Websocket on message recieved event handler. 
@@ -144,6 +146,8 @@ TwistedMetal.Game.prototype = {
     // existing tank from the game space.  Which action to perform is
     // specified by in the message recieved by from the server.
 	update: function () {
+        if(this.connected) {
+            
         console.log("update");
         // Ensure that the queue is not empty.
         if(0 < this.message_queue.length) {
@@ -167,10 +171,10 @@ TwistedMetal.Game.prototype = {
             } 
         }
 
-        console.log("this.create_cliente: " + this.create_client);
-        console.log("this.add_client: " + this.add_client);
-        console.log("this.update_client: " + this.update_client);
-        console.log("this.delete_client: " + this.delete_client);
+        //console.log("this.create_cliente: " + this.create_client);
+        //console.log("this.add_client: " + this.add_client);
+        //console.log("this.update_client: " + this.update_client);
+        //console.log("this.delete_client: " + this.delete_client);
 
         // Add a new client.
         if(this.add_client) {
@@ -338,6 +342,8 @@ TwistedMetal.Game.prototype = {
             this.tank.fire();
                 // Send the tanks instance as a json to the server.
                 this.ws.send(this.tank.jsonify());
+        }
+
         }
 	},
 
