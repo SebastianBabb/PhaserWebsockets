@@ -48,16 +48,7 @@ class GameBackend
             @clients << ws
             @tanks[ws.object_id] = tank
 
-            # Debug output.
-            #p "=== Clients ==="
-            #@clients.each do |client|
-                #p client.object_id
-            #end
             p "Number of clients: #{@clients.length}"
-            #p "=== Tanks ==="
-            #@tanks.each do |tank|
-                #p tank
-            #end
             p "Number of tanks: #{@tanks.length}"
          end
 
@@ -71,11 +62,13 @@ class GameBackend
             # Use the tank id to get the tank object.
             tank = @tanks[tank_json["id"]]
 
-            # Updat the tank object.
+            # Update the tank object.
             tank.x_pos = tank_json["x_pos"]
             tank.y_pos = tank_json["y_pos"]
             tank.angle = tank_json["angle"]
+            tank.turret_rotation = tank_json["turret_rotation"]
             tank.speed = tank_json["speed"]
+            tank.fire = tank_json["fire"]
                 
             # Broadcast the update to all of the clients.
             @clients.each do |client|
@@ -108,16 +101,7 @@ class GameBackend
             # Set the socket to nil. 
             ws = nil
 
-            # Debug output.
-            p "=== Clients ==="
-            #@clients.each do |client|
-                #p client.object_id
-            #end
             p "Number of clients: #{@clients.length}"
-            #p "=== Tanks ==="
-            #@tanks.each do |tank|
-                #p tank
-            #end
             p "Number of tanks: #{@tanks.length}"
          end
 

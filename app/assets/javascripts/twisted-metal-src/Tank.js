@@ -1,5 +1,5 @@
 // Tank Prototype.
-function Tank(id, x_pos, y_pos, angle, speed, health, follow, game, bullets) {
+function Tank(id, x_pos, y_pos, angle, turret_rotation, speed, health, follow, game, bullets) {
     this.id = id;
     this.x_pos = x_pos;
     this.y_pos = y_pos;
@@ -28,6 +28,7 @@ function Tank(id, x_pos, y_pos, angle, speed, health, follow, game, bullets) {
     // The tank turret.
     this.turret = this.game.add.sprite(this.x_pos, this.y_pos, 'tank', 'turret');
     this.turret.anchor.setTo(0.3, 0.5);
+    this.turret.rotation = turret_rotation;
 
     // The shadow under the tank.
     this.shadow = this.game.add.sprite(this.x_pos, this.y_pos, 'tank', 'shadow');
@@ -56,8 +57,7 @@ Tank.prototype.remove = function() {
     this.shadow.kill();
 }
 
-// Realign all of the tanks parts. Called every update.
-Tank.prototype.realign = function() {
+Tank.prototype.realignLocal = function() {
         this.shadow.x = this.tank.x;
         this.shadow.y = this.tank.y;
         this.shadow.rotation = this.tank.rotation;
@@ -68,12 +68,28 @@ Tank.prototype.realign = function() {
         this.turret.rotation = this.game.physics.arcade.angleToPointer(this.turret);
 }
 
+// Realign all of the tanks parts. Called every update.
+Tank.prototype.realignRemote = function() {
+        this.shadow.x = this.tank.x;
+        this.shadow.y = this.tank.y;
+        this.shadow.rotation = this.tank.rotation;
+
+        this.turret.x = this.tank.x;
+        this.turret.y = this.tank.y;
+
+        //this.turret.rotation = this.game.physics.arcade.angleToPointer(this.turret);
+}
+
 // Set tank angle.
 Tank.prototype.setAngle = function(angle) {
     this.angle = angle;
     this.tank.angle = this.angle;
     this.turret.angle = this.angle;
     this.shadow.angle = this.angle;
+} 
+
+Tank.prototype.setTurretRotation = function(angle) {
+    this.turret.rotation = angle;
 } 
 
 // Set tank speed.
@@ -83,6 +99,24 @@ Tank.prototype.setSpeed = function(speed) {
     this.turret.speed = this.speed;
     this.shadow.speed = this.speed;
 } 
+//
+// Rotate the tank left.
+Tank.prototype.rotateLeft = function(degrees) {
+    // console.log("turning left");
+    this.tank.angle -= degrees;
+
+}
+
+// Rotate the tank right.
+Tank.prototype.rotateRight = function(degrees) {
+    // console.log("turning right");
+    this.tank.angle += degrees;
+} 
+
+// Slow down the tank.
+Tank.prototype.reduceSpeed = function(increment) {
+    this.tank.speed -= increment;
+}
 
 // Get tank id.
 Tank.prototype.getID = function() {
@@ -124,30 +158,6 @@ Tank.prototype.getYPosition = function() {
     return this.tank.y;
 }
 
-// Rotate the tank left.
-Tank.prototype.turnLeft = function() {
-    // console.log("turning left");
-    this.tank.angle -= 4;
-
-}
-
-// Rotate the tank right.
-Tank.prototype.turnRight = function() {
-    // console.log("turning right");
-    this.tank.angle += 4;
-} 
-
-// Move the tank forward.
-Tank.prototype.moveForward= function() {
-   // console.log("forward");
-   //  The speed we'll travel at
-   this.tank.speed = 300;
-} 
-
-// Slow down the tank.
-Tank.prototype.reduceSpeed = function() {
-    this.tank.speed -= 4;
-}
 
 // Fire the tanks cannon.
 Tank.prototype.fire = function() {
@@ -171,6 +181,8 @@ Tank.prototype.fire = function() {
 }
 
 // Return json representation of tank state.
-Tank.prototype.jsonify = function() {
-    return JSON.stringify({id: this.id, x_pos: this.tank.x, y_pos: this.tank.y, angle: this.tank.angle, speed: this.tank.speed, health: this.health});
+Tank.prototype.jsonify = function(firing) {
+    return JSON.stringify({id: this.id, x_pos: this.tank.x, y_pos: this.tank.y,
+                           angle: this.tank.angle, turret_rotation: this.turret.rotation,
+                           speed: this.tank.speed, health: this.health, fire: firing});
 }
