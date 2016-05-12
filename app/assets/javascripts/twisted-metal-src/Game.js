@@ -90,13 +90,14 @@ TwistedMetal.Game.prototype = {
                 new_tank = this.message_queue.shift();
 
                 // Create the tank with set camera follow true - last param.
-                var x = 50;
-                var y = 50;
+                var x = new_tank.x_pos;
+                var y = new_tank.y_pos;
                 var speed = 0;
-                var angle = 90;
+                var angle = new_tank.angle;
                 var turret_rotation = 0;
                 var health = 3;
                 var follow = true;
+                
                 this.tank = new Tank(new_tank.id, x, y, angle, turret_rotation, speed, health, follow, this.game, this.bullets);
                 this.clients[this.tank.id] = this.tank;
                 this.create_client = false;
@@ -141,6 +142,19 @@ TwistedMetal.Game.prototype = {
     // existing tank from the game space.  Which action to perform is
     // specified by in the message recieved by from the server.
 	update: function () {
+        // Checkd for collisions.
+        for(client_id_1 in this.clients) {
+            for(client_id_2 in this.clients) {
+                if(client_id_1 != client_id_2) {
+                    console.log("COLLISION CHECK");
+                    this.game.physics.arcade.collide(this.clients[client_id_1].tank, this.clients[client_id_2].tank)
+                }
+            }   
+            // Realign all clients.
+            this.clients[client_id_1].realignRemote();
+        }
+
+
         // Ensure that the queue is not empty.
         if(0 < this.message_queue.length) {
             // Determine which action to perform.
@@ -171,21 +185,23 @@ TwistedMetal.Game.prototype = {
                 add_tank = this.message_queue.shift();
 
                 // Create and add the tank to the tank hash.
-                var x = -100;
-                var y = -100;
-                var speed = 0;
-                var angle = 0;
-                var turret_rotation = 0;
-                var health = 3;
+                var x = add_tank.x_pos;
+                var y = add_tank.y_pos;
+                var speed = add_tank.speed;
+                var angle = add_tank.angle;
+                var turret_rotation = add_tank.turret_rotation;
+                var health = add_tank.health;
                 var follow = false;
                 this.clients[add_tank.id] = new Tank(add_tank.id, x, y, angle, turret_rotation, speed, health, follow, this.game, this.bullets);
+                this.clients[add_tank.id].realignRemote();
 
                 // Toggle flag back to false.
                 this.add_client = false;
 
                 // Log event.
-                console.log("ADDING CLIENT: " + add_tank.id);
+                console.log("ADDING CLIENT: " + JSON.stringify(add_tank));
                 console.log("ADD_CLIENT = FALSE");
+
             }
         }
         
@@ -201,6 +217,8 @@ TwistedMetal.Game.prototype = {
                 // Tank to update.
                 tank = this.clients[tank_update.id];
                 tank.setAngle(tank_update.angle);
+                tank.setXPosition(tank_update.x_pos);
+                tank.setYPosition(tank_update.y_pos);
                 tank.setSpeed(tank_update.speed);
                 tank.setTurretRotation(tank_update.turret_rotation);
 
@@ -217,6 +235,8 @@ TwistedMetal.Game.prototype = {
                 console.log("speed: " + tank.getSpeed());
                 console.log("health: " + tank.health);
                 console.log("firing: " + tank_update.fire);
+                console.log("fire_x: " + tank_update.fire_x);
+                console.log("fire_y: " + tank_update.fire_y);
                 console.log("rotation: " + tank.getRotation());
                 console.log("velocity: " + tank.getVelocity());
                 //for(var param in tank_update) {
@@ -237,7 +257,11 @@ TwistedMetal.Game.prototype = {
 
                 // Check if tank is firing.
                 if(tank_update.fire) {
-                    tank.fire();
+                    // Pointer coords - where the bullet should go.
+                    var x = tank_update.fire_x;
+                    var y = tank_update.fire_y;
+                    console.log("REMOTE TANK FIRE: " + x + "/" + y);
+                    tank.fire(x, y);
                 }
                 
 
@@ -333,8 +357,13 @@ TwistedMetal.Game.prototype = {
 
         if (this.game.input.activePointer.isDown)
         {
+            // Pointer coords - where the bullet should go.
+            var x = this.game.input.activePointer.worldX;
+            var y = this.game.input.activePointer.worldY;
+
             //  Boom!
-            this.tank.fire();
+            this.tank.fire(x, y);
+                
             // Send the tanks instance as a json to the server.
             this.ws.send(this.tank.jsonify(true));
         }
@@ -368,11 +397,13 @@ TwistedMetal.Game.prototype = {
     // Render debugging info for tank.
     render: function() {
         // game.debug.text('Active Bullets: ' + bullets.countLiving() + ' / ' + bullets.length, 32, 32);
-        this.game.debug.text('X: ' + this.tank.getXPosition().toString().slice(0,6), 32, 32)
-        this.game.debug.text('Y: ' + this.tank.getYPosition().toString().slice(0,6), 32, 64);
-        this.game.debug.text('Angle: ' + this.tank.getAngle(), 32, 96);
-        this.game.debug.text('Speed: ' + this.tank.getSpeed(), 32, 128);
-        this.game.debug.text('Tank ID: ' + this.tank.id, 32, 160);
-        this.game.debug.text('Clients: ' + Object.keys(this.clients).length, 32, 192);
+        //this.game.debug.text('X: ' + this.tank.getXPosition().toString().slice(0,6), 32, 32)
+        //this.game.debug.text('Y: ' + this.tank.getYPosition().toString().slice(0,6), 32, 64);
+        //this.game.debug.text('Angle: ' + this.tank.getAngle(), 32, 96);
+        //this.game.debug.text('Speed: ' + this.tank.getSpeed(), 32, 128);
+        //this.game.debug.text('Tank ID: ' + this.tank.id, 32, 160);
+        //this.game.debug.text('Clients: ' + Object.keys(this.clients).length, 32, 192);
+        this.game.debug.bodyInfo(this.tank.tank, 16, 24);
+
     },
 };

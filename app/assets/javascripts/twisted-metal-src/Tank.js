@@ -9,6 +9,9 @@ function Tank(id, x_pos, y_pos, angle, turret_rotation, speed, health, follow, g
     this.game = game;
     this.bullets = bullets;
 
+    this.fire_x = null;
+    this.fire_y = null;
+
     this.fireRate = 100;
     this.nextFire = 0;
     this.alive = true;
@@ -39,7 +42,9 @@ function Tank(id, x_pos, y_pos, angle, turret_rotation, speed, health, follow, g
     this.game.physics.enable(this.tank, Phaser.Physics.ARCADE);
     this.tank.body.drag.set(0.2);
     this.tank.body.maxVelocity.setTo(400, 400);
+    this.tank.body.immovable = false;
     this.tank.body.collideWorldBounds = true;
+    //this.tank.body.bounce.setTo(0.5,0.5);
 
     this.tank.bringToTop();
     this.turret.bringToTop();
@@ -78,6 +83,14 @@ Tank.prototype.realignRemote = function() {
         this.turret.y = this.tank.y;
 
         //this.turret.rotation = this.game.physics.arcade.angleToPointer(this.turret);
+}
+
+Tank.prototype.setXPosition= function(x) {
+    this.tank.x = x;
+}
+
+Tank.prototype.setYPosition= function(y) {
+    this.tank.y = y;
 }
 
 // Set tank angle.
@@ -160,8 +173,10 @@ Tank.prototype.getYPosition = function() {
 
 
 // Fire the tanks cannon.
-Tank.prototype.fire = function() {
-    // console.log("fire");
+Tank.prototype.fire = function(x, y) {
+    this.fire_x = x;
+    this.fire_y = y;
+     console.log(x + " / " + y);
     // Limit the rate of fire.
     if (this.game.time.now > this.nextFire && this.bullets.countDead() > 0)
     {
@@ -173,7 +188,12 @@ Tank.prototype.fire = function() {
 
         bullet.reset(this.turret.x, this.turret.y);
 
-        bullet.rotation = this.game.physics.arcade.moveToPointer(bullet, 1000, this.game.input.activePointer, 500);
+        //var x = this.game.input.activePointer.worldX;
+        //var y = this.game.input.activePointer.worldY;
+        //console.log(x + "/" + y);
+        //var pointer = new Phaser.Point(x,y);
+        //console.log(pointer); 
+        bullet.rotation = this.game.physics.arcade.moveToXY(bullet, x, y, 1000, 500);
     } else {
         // Cant fire, timeout has not finished.
         // console.log(this.game.time.now +" < " + this.nextFire);
@@ -184,5 +204,6 @@ Tank.prototype.fire = function() {
 Tank.prototype.jsonify = function(firing) {
     return JSON.stringify({id: this.id, x_pos: this.tank.x, y_pos: this.tank.y,
                            angle: this.tank.angle, turret_rotation: this.turret.rotation,
-                           speed: this.tank.speed, health: this.health, fire: firing});
+                           speed: this.tank.speed, health: this.health, fire: firing,
+                           fire_x: this.fire_x, fire_y: this.fire_y});
 }

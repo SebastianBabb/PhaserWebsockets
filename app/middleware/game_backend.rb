@@ -31,8 +31,8 @@ class GameBackend
           # Socket connection opened.
           ws.on :open do |event|
             p "*Open Game Websocket: #{ws.object_id}"
-            # Create the connecting client's tank object.
-            tank = Tank.new(ws.object_id) 
+            # Create the connecting client's tank object - randomly generate its x,y.
+            tank = Tank.new(ws.object_id, rand(500), rand(500)) 
             # Send the new client its tank.
             ws.send(tank.jsonify(CREATE_CLIENT))
 
@@ -69,6 +69,8 @@ class GameBackend
             tank.turret_rotation = tank_json["turret_rotation"]
             tank.speed = tank_json["speed"]
             tank.fire = tank_json["fire"]
+            tank.fire_x = tank_json["fire_x"]
+            tank.fire_y = tank_json["fire_y"]
                 
             # Broadcast the update to all of the clients.
             @clients.each do |client|
