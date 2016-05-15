@@ -1,9 +1,10 @@
 // Tank Prototype.
-function Tank(id, x_pos, y_pos, angle, turret_rotation, speed, health, follow, game, bullets) {
+function Tank(id, x_pos, y_pos, angle, turret_rotation, speed, health, score, follow, game, bullets) {
     this.id = id;
     this.x_pos = x_pos;
     this.y_pos = y_pos;
     this.health = health;
+    this.score = score;
     this.follow = follow;
 
     this.game = game;
@@ -62,6 +63,22 @@ Tank.prototype.remove = function() {
     this.shadow.kill();
 }
 
+// Damage the tank. Returns true if tank is out of health.
+Tank.prototype.damage = function() {
+    // Decrement health.
+    this.health -= 1;
+
+    if(this.health <= 0) {
+        this.alive = false;
+
+        this.remove();
+
+        return true;
+    }
+
+    return false;
+}
+
 Tank.prototype.realignLocal = function() {
         this.shadow.x = this.tank.x;
         this.shadow.y = this.tank.y;
@@ -112,7 +129,12 @@ Tank.prototype.setSpeed = function(speed) {
     this.turret.speed = this.speed;
     this.shadow.speed = this.speed;
 } 
-//
+
+
+Tank.prototype.setHealth = function(health) {
+    this.health = health;
+}
+
 // Rotate the tank left.
 Tank.prototype.rotateLeft = function(degrees) {
     // console.log("turning left");
@@ -171,6 +193,10 @@ Tank.prototype.getYPosition = function() {
     return this.tank.y;
 }
 
+// Get the tank's current Y position.
+Tank.prototype.getHealth = function() {
+    return this.health;
+}
 
 // Fire the tanks cannon.
 Tank.prototype.fire = function(x, y) {
@@ -188,11 +214,6 @@ Tank.prototype.fire = function(x, y) {
 
         bullet.reset(this.turret.x, this.turret.y);
 
-        //var x = this.game.input.activePointer.worldX;
-        //var y = this.game.input.activePointer.worldY;
-        //console.log(x + "/" + y);
-        //var pointer = new Phaser.Point(x,y);
-        //console.log(pointer); 
         bullet.rotation = this.game.physics.arcade.moveToXY(bullet, x, y, 1000, 500);
     } else {
         // Cant fire, timeout has not finished.
@@ -204,6 +225,6 @@ Tank.prototype.fire = function(x, y) {
 Tank.prototype.jsonify = function(firing) {
     return JSON.stringify({id: this.id, x_pos: this.tank.x, y_pos: this.tank.y,
                            angle: this.tank.angle, turret_rotation: this.turret.rotation,
-                           speed: this.tank.speed, health: this.health, fire: firing,
+                           speed: this.tank.speed, health: this.health, score: this.score, alive: this.alive, fire: firing,
                            fire_x: this.fire_x, fire_y: this.fire_y});
 }
