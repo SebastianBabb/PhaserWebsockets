@@ -1,5 +1,6 @@
 body {
-  background-image:url(http://pse7en.webs.com/TM%20Shirt/Twistedmetal%20red%20sweet%20tooth.jpg);
+  /*background-image:url(http://pse7en.webs.com/TM%20Shirt/Twistedmetal%20red%20sweet%20tooth.jpg);*/
+  background-image:url(/assets/tank.png);
   background-size:cover;
   background-repeat:no-repeat;
   /*background-position: 50% 50%;*/
