@@ -55,6 +55,7 @@ TwistedMetal.Game = function (game) {
         console.log("Connected to game websocket.  Starting game...");
     });
 
+
     /*
      * Websocket on message recieved event handler. This is where all
      * messages get queued up for processing by the game engine update
@@ -167,8 +168,8 @@ TwistedMetal.Game.prototype = {
             }    
         }
 
-        // this.logo = this.game.add.sprite(0, 200, 'logo');
-        // this.logo.fixedToCamera = true;
+        // this.kill_screen = this.game.add.sprite(0, 200, 'logo');
+        // this.kill_screen.fixedToCamera = true;
 
         // this.game.input.onDown.add(this.removeLogo, this);
 
@@ -184,7 +185,7 @@ TwistedMetal.Game.prototype = {
 
     // removeLogo: function() {
     //     this.game.input.onDown.remove(this.removeLogo, this);
-    //     this.logo.kill();
+    //     this.kill_screen.kill();
 
     // },
 
@@ -205,7 +206,15 @@ TwistedMetal.Game.prototype = {
             // parade around!
             // this.game.debug.text('YOU WIN!', 250, 250);
             this.game_started = false;
-            alert("YOU WIN!");
+            this.win_screen = this.game.add.sprite(0, 200, 'win');
+            this.win_screen.fixedToCamera = true;
+            //alert("YOU WIN!");
+            //this.game.text( 50, 50, 'rgba(0,0,0,0/5)', 2);
+            //var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
+            //text = this.game.add.text( 50, 50, "YOU WIN!", style);
+            //text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
+            //text.setTextBounds(0, 100, 800, 100);
+
         }
 
 
@@ -243,8 +252,8 @@ TwistedMetal.Game.prototype = {
 
                     // Show kill screen.
                     setTimeout(function() {
-                        this.logo = this.game.add.sprite(0, 200, 'logo');
-                        this.logo.fixedToCamera = true;
+                        this.kill_screen = this.game.add.sprite(0, 200, 'lose');
+                        this.kill_screen.fixedToCamera = true;
                     }.bind(this),500);
                 }
 
@@ -279,6 +288,10 @@ TwistedMetal.Game.prototype = {
 
         // Add a new client.
         if(this.add_client) {
+            // A new challanger has entered.  Remove the winner screen.
+            if(this.win_screen != null) {
+                this.win_screen.kill();
+            }   
             // Started the game.  The game only starts when there is more than one player.
             this.game_started = true;
 
