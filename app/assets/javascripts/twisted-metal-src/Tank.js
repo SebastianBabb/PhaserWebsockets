@@ -137,14 +137,12 @@ Tank.prototype.setHealth = function(health) {
 
 // Rotate the tank left.
 Tank.prototype.rotateLeft = function(degrees) {
-    // console.log("turning left");
     this.tank.angle -= degrees;
 
 }
 
 // Rotate the tank right.
 Tank.prototype.rotateRight = function(degrees) {
-    // console.log("turning right");
     this.tank.angle += degrees;
 } 
 
@@ -202,12 +200,9 @@ Tank.prototype.getHealth = function() {
 Tank.prototype.fire = function(x, y) {
     this.fire_x = x;
     this.fire_y = y;
-     console.log(x + " / " + y);
     // Limit the rate of fire.
     if (this.game.time.now > this.nextFire && this.bullets.countDead() > 0)
     {
-
-        // console.log(this.game.time.now + " > " + this.nextFire);
         this.nextFire = this.game.time.now + this.fireRate;
 
         var bullet = this.bullets.getFirstExists(false);
@@ -215,9 +210,6 @@ Tank.prototype.fire = function(x, y) {
         bullet.reset(this.turret.x, this.turret.y);
 
         bullet.rotation = this.game.physics.arcade.moveToXY(bullet, x, y, 1000, 500);
-    } else {
-        // Cant fire, timeout has not finished.
-        // console.log(this.game.time.now +" < " + this.nextFire);
     }
 }
 

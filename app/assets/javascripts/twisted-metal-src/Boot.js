@@ -1,23 +1,5 @@
 // Create a TwistedMetal object.
 TwistedMetal = { 
-
-    /* Here we've just got some global level vars that persist regardless of State swaps */
-    // score: 0,
-
-    /* If the music in your game needs to play through-out a few State swaps, then you could reference it here */
-    // music: null,
-
-    /* Your game can check TwistedMetal.orientated in internal loops to know if it should pause or not */
-    // orientated: false,
-
-    // Game websocket
-    // scheme: 'ws://',
-    // Ensure the socket uri has /game appended to it so the proper middleware is loaded.
-    //uri: 'wss://\' + window.document.location.host + '/game',
-
-    //tank: null,
-
-    // Current games running.
     arenas: null,
 
     // Clients connected to the game socket - number of tanks battling.
@@ -34,13 +16,11 @@ TwistedMetal.Boot = function (game) {
 TwistedMetal.Boot.prototype = {
 
     preload: function () {
-        console.log("Boot: preload");
         this.load.image('preloaderBar', '/twisted-metal/preload.png');
 
     },
 
     create: function () {
-        console.log("Boot: create");
         this.input.maxPointers = 1;
         this.stage.disableVisibilityChange = true;
 

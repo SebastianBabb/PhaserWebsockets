@@ -65,9 +65,6 @@ TwistedMetal.Game = function (game) {
      * client (player) before doing anything else. 
      */
     this.ws.addEventListener("message", function(event) {
-        // Log the message.
-        console.log("message: " + event.data);
-
         // Parse the json send from the server.
         message = JSON.parse(event.data)
 
@@ -88,9 +85,7 @@ TwistedMetal.Game.prototype = {
 
     // Create the game world.
 	create: function () {
-        // Log status.
-        console.log("Game: create");
-
+        // Game clock - priority 2.
         // this.game.time.events.add(Phaser.Timer.SECOND * 120, this.endGame, this);
 
         //  Resize the game world to be a 2000 x 2000 square
@@ -141,7 +136,6 @@ TwistedMetal.Game.prototype = {
                 // Pop (shift) the oldest message from the top of the queue.
                 new_tank = this.message_queue.shift();
 
-                console.log("new tank: " + JSON.stringify(new_tank));
                 // Create the tank with set camera follow true - last param.
                 var x = new_tank.x_pos;
                 var y = new_tank.y_pos;
@@ -160,18 +154,8 @@ TwistedMetal.Game.prototype = {
 
                 // Return create client flag back to false.
                 this.create_client = false;
-                
-                // Log status.
-                console.log("CREATING CLIENT: " + new_tank.id);
-
-
             }    
         }
-
-        // this.kill_screen = this.game.add.sprite(0, 200, 'logo');
-        // this.kill_screen.fixedToCamera = true;
-
-        // this.game.input.onDown.add(this.removeLogo, this);
 
         // Set game boundaries.
         this.game.camera.deadzone = new Phaser.Rectangle(150, 150, 500, 300);
@@ -182,12 +166,6 @@ TwistedMetal.Game.prototype = {
         // Create input cursor.
         this.cursors = this.game.input.keyboard.createCursorKeys();
 	},     
-
-    // removeLogo: function() {
-    //     this.game.input.onDown.remove(this.removeLogo, this);
-    //     this.kill_screen.kill();
-
-    // },
 
     /*
      * Update the client.  This is where all of the tanks will be updated.
@@ -204,17 +182,9 @@ TwistedMetal.Game.prototype = {
         if(Object.keys(this.clients).length < 2 && this.game_started && this.tank.alive) {
             // Show winner screen.  Dont disable controls, winners get to
             // parade around!
-            // this.game.debug.text('YOU WIN!', 250, 250);
             this.game_started = false;
             this.win_screen = this.game.add.sprite(0, 200, 'win');
             this.win_screen.fixedToCamera = true;
-            //alert("YOU WIN!");
-            //this.game.text( 50, 50, 'rgba(0,0,0,0/5)', 2);
-            //var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
-            //text = this.game.add.text( 50, 50, "YOU WIN!", style);
-            //text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
-            //text.setTextBounds(0, 100, 800, 100);
-
         }
 
 
@@ -222,7 +192,6 @@ TwistedMetal.Game.prototype = {
         for(client_id_1 in this.clients) {
             for(client_id_2 in this.clients) {
                 if(client_id_1 != client_id_2) {
-                    console.log("COLLISION CHECK");
                     this.game.physics.arcade.collide(this.clients[client_id_1].tank, this.clients[client_id_2].tank)
                 }
             }   
@@ -235,10 +204,7 @@ TwistedMetal.Game.prototype = {
             }
             // Remove tanks that are out of health.
             if(this.clients[client_id_1].getHealth() < 1) {
-                console.log("Remove: client_id_1");
                 this.removeClient(client_id_1);
-
-                // Jail the client_id, so they cant rejoin.
 
                 // If local is dead, disable mouse so player cant shoot, but
                 // can still move around and watch the rest of the game.
@@ -270,17 +236,14 @@ TwistedMetal.Game.prototype = {
             switch(this.message_queue[0].action) {
                 case 1:
                     // ADD CLIENT
-                    console.log("ADD_CLIENT = TRUE");
                     this.add_client = true;
                     break;
                 case 2:
                     // UPDATE CLIENT
-                    console.log("UPDATE_CLIENT = TRUE");
                     this.update_client = true;
                     break;
                 case 3:
                     // DELETE CLIENT
-                    console.log("DELETE_CLIENT = TRUE");
                     this.delete_client = true;
                     break;
             } 
@@ -314,11 +277,6 @@ TwistedMetal.Game.prototype = {
 
                 // Toggle flag back to false.
                 this.add_client = false;
-
-                // Log event.
-                console.log("ADDING CLIENT: " + JSON.stringify(add_tank));
-                console.log("ADD_CLIENT = FALSE");
-
             }
         }
         
@@ -326,8 +284,6 @@ TwistedMetal.Game.prototype = {
         if(this.update_client) {
             // Check that there are message to process.
             if(0 < this.message_queue.length) {
-                // Log event.
-                console.log("UPDATING CLIENT");
                 // Update values.
                 tank_update = this.message_queue.shift();
 
@@ -341,31 +297,6 @@ TwistedMetal.Game.prototype = {
                 tank.setHealth(tank_update.health);
                 tank.alive = tank_update.alive;
                 tank.score = tank_update.score;
-                //console.log(tank);
-                //console.log("getSpeed(): " + tank.getSpeed());
-
-                // Process update.
-                //var tank_update = this.message_queue.shift();
-                
-                console.log("id: " + tank.id);
-                console.log("x_pos: " + tank.x_pos);
-                console.log("y_pos: " + tank.y_pos);
-                console.log("angle: " + tank.angle);
-                console.log("speed: " + tank.getSpeed());
-                console.log("health: " + tank.health);
-                console.log("firing: " + tank_update.fire);
-                console.log("fire_x: " + tank_update.fire_x);
-                console.log("fire_y: " + tank_update.fire_y);
-                console.log("rotation: " + tank.getRotation());
-                console.log("velocity: " + tank.getVelocity());
-                console.log("score: " + tank.score);
-                //for(var param in tank_update) {
-                    //if(tank[param] != tank_update[param]) {
-                        ////console.log(tank[param] + "!= " + tank_update[param]);
-                        //tank[param] = tank_update[param];
-                    //}
-                //}
-
 
                 // Update the physics.
                 // Set the tanks rotation, speed, and point.
@@ -380,7 +311,6 @@ TwistedMetal.Game.prototype = {
                     // Pointer coords - where the bullet should go.
                     var x = tank_update.fire_x;
                     var y = tank_update.fire_y;
-                    console.log("REMOTE TANK FIRE: " + x + "/" + y);
                     tank.fire(x, y);
                 }
                 
@@ -407,19 +337,6 @@ TwistedMetal.Game.prototype = {
             }   
         }
 
-        // this.enemiesAlive = 0;
-
-        // for (var i = 0; i < this.enemies.length; i++)
-        // {
-        //     if (this.enemies[i].alive)
-        //     {
-        //         this.enemiesAlive++;
-        //         this.game.physics.arcade.collide(this.tank, this.enemies[i].clients[0]);
-        //         this.game.physics.arcade.overlap(this.bulletsLocal, this.enemies[i].clients[0], this.bulletHitEnemy, null, this);
-        //         this.enemies[i].update
-        //     }
-        // }
-
         // Setup the cursor - what buttons make the tank do what.
         if (this.cursors.left.isDown && this.tank.alive)
         {
@@ -444,7 +361,6 @@ TwistedMetal.Game.prototype = {
         {
             if (this.tank.getSpeed() > 0 && this.tank.alive)
             {
-                //console.log("Current Speed:" + this.tank.getSpeed());
                 this.tank.reduceSpeed(4);
                 // Send the tanks instance as a json to the server.
                 this.ws.send(this.tank.jsonify(false));
@@ -453,18 +369,13 @@ TwistedMetal.Game.prototype = {
 
         if (this.tank.getSpeed() > 0)
         {
-            //console.log("update speed");
             // Set the tanks rotation, speed, and point.
             this.game.physics.arcade.velocityFromRotation(this.tank.getRotation(), this.tank.getSpeed(), this.tank.getVelocity());
-
-            // Send the tanks instance as a json to the server.
-            //this.ws.send(this.tank.jsonify(false));
         }
 
         this.land.tilePosition.x = -this.game.camera.x;
         this.land.tilePosition.y = -this.game.camera.y;
 
-        //this.ws.send(this.tank.jsonify(false));
         // Realign the tank parts.
         this.tank.realignLocal();
 
@@ -485,8 +396,6 @@ TwistedMetal.Game.prototype = {
 
 	endGame: function () {
         alert("GAME OVER!");
-		// this.state.start('MainMenu');
-        //this.clients[this.client_id] = null;
 	},
 
     // Local bullet hits remote tank.  Update local.
@@ -497,16 +406,12 @@ TwistedMetal.Game.prototype = {
 
     // Local bullet hits remote tank.  Update server.
     bulletHitRemoteUpdate: function(client_id) {
-        console.log(this.tank.id + " hit " + client_id);
-
         // Update the remote tanks health.
         var destroyed = this.clients[client_id].damage();
 
         // If the remote tanks health is <= 0, remove it from the game space
         // and update shooter's score.
         if (destroyed) {
-            console.log(client_id + " DESTROYED!!!");
-
             // Update score.
             this.tank.score += 1;
 
@@ -514,8 +419,6 @@ TwistedMetal.Game.prototype = {
             var explosionAnimation = this.explosions.getFirstExists(false);
             explosionAnimation.reset(this.clients[client_id].getXPosition(), this.clients[client_id].getYPosition());
             explosionAnimation.play('kaboom', 30, false, true);
-        } else {
-            console.log("damage: " + destroyed);
         }
 
         // Update the server.
@@ -530,9 +433,6 @@ TwistedMetal.Game.prototype = {
                 
                 // Delete the tank from the tanks hash.
                 delete this.clients[client_id];
-
-                // Log event.
-                console.log("DELETING CLIENT: " + client_id);
             }
     },
 
@@ -540,32 +440,12 @@ TwistedMetal.Game.prototype = {
 
         bullet.kill();
 
-        // var destroyed = this.enemies[tank.name].damage();
-
-        // if (destroyed)
-        // {
-        //     var explosionAnimation = this.explosions.getFirstExists(false);
-        //     explosionAnimation.reset(tank.x, tank.y);
-        //     explosionAnimation.play('kaboom', 30, false, true);
-        // }
-
     },
 
     // Render debugging info for tank.
     render: function() {
-        // game.debug.text('Active Bullets: ' + bullets.countLiving() + ' / ' + bullets.length, 32, 32);
-        // this.game.debug.text('X: ' + this.tank.getXPosition().toString().slice(0,6), 32, 32)
-        // this.game.debug.text('Y: ' + this.tank.getYPosition().toString().slice(0,6), 32, 64);
-        // this.game.debug.text('Angle: ' + this.tank.getAngle(), 32, 96);
-        // this.game.debug.text('Speed: ' + this.tank.getSpeed(), 32, 128);
-        // this.game.debug.text('Tank ID: ' + this.tank.id, 32, 160);
         this.game.debug.text('Players: ' + Object.keys(this.clients).length, 32, 32);
         this.game.debug.text('Health: ' + this.tank.health, 332, 32);
-        // this.game.debug.text('Alive: ' + this.tank.alive, 232, 32);
         this.game.debug.text('Score: ' + this.tank.score, 650, 32);
-        // this.game.debug.text('Timer: ' + this.game.time.events.duration/1000, 32, 320);
-
-        // this.game.debug.bodyInfo(this.tank.tank, 16, 24);
-
     },
 };
