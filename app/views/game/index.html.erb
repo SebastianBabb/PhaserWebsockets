@@ -1,0 +1,42 @@
+<%= stylesheet_link_tag "signin" %>
+<%# javascript_include_tag "twisted-metal-src/Boot.js.erb"%>
+<%# javascript_include_tag "chat_lobby.js"%>
+<%# ORDER IN WHICH JS FILES ARE INCLUDED MATTERS %>
+<%# javascript_include_tag *Dir[Rails.root.join("app/assets/javascripts/twisted-metal-src/Boot.js")] %>
+<%# javascript_include_tag *Dir[Rails.root.join("app/assets/javascripts/twisted-metal-src/Preloader.js")] %>
+<%# javascript_include_tag *Dir[Rails.root.join("app/assets/javascripts/twisted-metal-src/MainMenu.js")] %>
+<%# javascript_include_tag *Dir[Rails.root.join("app/assets/javascripts/twisted-metal-src/Game.js")] %>
+<%# javascript_include_tag *Dir[Rails.root.join("app/assets/javascripts/twisted-metal-src/Tank.js")] %>
+
+
+<% if user_signed_in? %>
+	<h2 style="color:#fff; text-align:center; font-weight:bold;">Welcome to Tank Battle</h2>
+	<h3 style="color:#fff; text-align:center"><%= current_user.email %></h3>
+<% end %>
+
+<div class="col-md-offset-5">
+	<ul style="list-style-type:none;">
+		<li style="color: #fff;display:inline; padding: 10px;"><%= link_to "Lobby", "/lobby/index" %></li>
+		<li style="color: #fff;display:inline;padding: 10px"><%= link_to "Sign out", destroy_user_session_path, :method => :delete %></li>
+	</ul>
+</div>
+
+<div id="game"></div>
+<div id="orientation"></div>
+
+<script type="text/javascript">
+
+(function () {
+
+    var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'game');
+
+    game.state.add('Boot', TwistedMetal.Boot);
+    game.state.add('Preloader', TwistedMetal.Preloader);
+    game.state.add('MainMenu', TwistedMetal.MainMenu);
+    game.state.add('Game', TwistedMetal.Game);
+
+    game.state.start('Boot');
+
+
+})();
+</script>

@@ -1,0 +1,8 @@
+body {
+  background-image:url(/assets/tank.png);
+  background-size:cover;
+  background-repeat:no-repeat;
+  /*background-position: 50% 50%;*/
+  background-color: #000;
+}
+

@@ -1,0 +1,129 @@
+body, html {
+  /*height: 100%;*/
+}
+
+body {
+  background-image:url(/assets/tank.png);
+  background-size:cover;
+  background-repeat:no-repeat;
+  /*background-position: 50% 50%;*/
+  background-color: #000;
+  margin-top:0px;
+}
+
+.lobby-container {
+    position: absolute;
+    top:0px;
+    left:0px;
+    right:0px;
+    bottom:25px; /* Account for 25px margin in games and chat container- hide scroll */
+
+    /*height:100%;*/
+    /*width:100%;*/
+    max-height:1080px;
+    max-width:1920px;
+    border-radius: 25px;
+    /*opacity: 0.2;*/
+    /*filter: alpha(opacity=60);*/
+    /*background-color:#fff;*/
+    background: rgba(255,255,255,0.0);
+    margin-top:0px;
+}
+
+.lobby-games-container {
+    margin-top: 25px;
+    height: 100%;
+    border-radius: 25px;
+    /*padding-top: 25px;*/
+    /*padding-bottom: 25px;*/
+    /*opacity: 0.2;*/
+    /*filter: alpha(opacity=60);*/
+    /*background-color: red;*/
+    background: rgba(0,0,0,0.1);
+}
+
+.lobby-games-window {
+    height:100%;
+    background-color: #fff; 
+    padding: 25px;
+    border-radius: 25px;
+    /*opacity: 1.0;*/
+    color: #fff;
+    /*filter: alpha(opacity=60);*/
+    background: rgba(255,255,255,0.1);
+}
+
+.lobby-chat-container {
+    margin-top: 25px;
+    height: 100%;
+    /*padding: 25px;*/
+    border-radius: 25px;
+    /*opacity: 0.2;*/
+    /*filter: alpha(opacity=60);*/
+    /*background-color: #000;*/
+    background: rgba(0,0,0,0.1);
+}
+
+.lobby-chat-form {
+    height: 100%;
+}
+
+.lobby-chat-window {
+    height:90%;
+    background-color: #fff; 
+    padding: 25px;
+    border-radius: 25px;
+    /*opacity: 1.0;*/
+    color: #fff;
+    color: #fff;
+    /*filter: alpha(opacity=60);*/
+    background: rgba(255,255,255,0.1);
+}
+
+.lobby-chat-message-container {
+    height:10%; 
+    padding-top:25px;
+    /*padding: 25px;*/
+    /*opacity: 1.0;*/
+    color: #fff;
+    /*background-color: green;*/
+}
+
+
+.lobby-chat-message-input {
+    /*height: 100%;*/
+    /*margin-top: 7px;*/
+    border-radius: 25px;
+    /*background-color: #fff; */
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+}
+
+.lobby-chat-message-input:focus {
+    outline: none;
+    border-color: white;
+    box-shadow: none;
+}
+
+.lobby-chat-message-send-btn {
+    /*height: 100%;*/
+    border-radius: 25px;
+    border-color: #fff;
+}
+
+.lobby-chat-message-send-btn:hover {
+    border-color: #fff;
+}
+
+p.lobby-chat-message {
+    font-size: 90%;
+    color: #fff;
+}
+
+span.lobby-chat-timestamp, span.lobby-chat-username {
+    color: #fff;
+}
+
+span.lobby-chat-username {
+    font-weight: bold;
+}
