@@ -12,7 +12,6 @@ Rails.application.routes.draw do
 
     get 'game/index'
 
-
     # Set devise login page as root.
     # Set logout page.
     devise_scope :user do

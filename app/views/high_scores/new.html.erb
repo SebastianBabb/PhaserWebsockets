@@ -1,5 +1,13 @@
-<h1>New High Score</h1>
+<%= stylesheet_link_tag "signin" %>
 
-<%= render 'form' %>
 
-<%= link_to 'Back', high_scores_path %>
+<div class='login-container'>
+
+	<h2 class="form-signin-heading links">New High Score</h2>
+	<div class="field">
+
+		<%= render 'form' %>
+
+		<%= link_to 'Back', high_scores_path %>
+	</div>
+</div>
