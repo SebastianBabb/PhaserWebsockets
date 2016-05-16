@@ -554,15 +554,15 @@ TwistedMetal.Game.prototype = {
     // Render debugging info for tank.
     render: function() {
         // game.debug.text('Active Bullets: ' + bullets.countLiving() + ' / ' + bullets.length, 32, 32);
-        this.game.debug.text('X: ' + this.tank.getXPosition().toString().slice(0,6), 32, 32)
-        this.game.debug.text('Y: ' + this.tank.getYPosition().toString().slice(0,6), 32, 64);
-        this.game.debug.text('Angle: ' + this.tank.getAngle(), 32, 96);
-        this.game.debug.text('Speed: ' + this.tank.getSpeed(), 32, 128);
-        this.game.debug.text('Tank ID: ' + this.tank.id, 32, 160);
-        this.game.debug.text('Clients: ' + Object.keys(this.clients).length, 32, 192);
-        this.game.debug.text('Health: ' + this.tank.health, 32, 224);
-        this.game.debug.text('Alive: ' + this.tank.alive, 32, 256);
-        this.game.debug.text('Score: ' + this.tank.score, 32, 288);
+        // this.game.debug.text('X: ' + this.tank.getXPosition().toString().slice(0,6), 32, 32)
+        // this.game.debug.text('Y: ' + this.tank.getYPosition().toString().slice(0,6), 32, 64);
+        // this.game.debug.text('Angle: ' + this.tank.getAngle(), 32, 96);
+        // this.game.debug.text('Speed: ' + this.tank.getSpeed(), 32, 128);
+        // this.game.debug.text('Tank ID: ' + this.tank.id, 32, 160);
+        this.game.debug.text('Players: ' + Object.keys(this.clients).length, 32, 32);
+        this.game.debug.text('Health: ' + this.tank.health, 332, 32);
+        // this.game.debug.text('Alive: ' + this.tank.alive, 232, 32);
+        this.game.debug.text('Score: ' + this.tank.score, 650, 32);
         // this.game.debug.text('Timer: ' + this.game.time.events.duration/1000, 32, 320);
 
         // this.game.debug.bodyInfo(this.tank.tank, 16, 24);

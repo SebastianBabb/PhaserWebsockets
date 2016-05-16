@@ -75,6 +75,7 @@ body {
     border-radius: 25px;
     /*opacity: 1.0;*/
     color: #fff;
+    color: #fff;
     /*filter: alpha(opacity=60);*/
     background: rgba(255,255,255,0.1);
 }
@@ -95,6 +96,7 @@ body {
     border-radius: 25px;
     /*background-color: #fff; */
     background: rgba(255,255,255,0.1);
+    color: #fff;
 }
 
 .lobby-chat-message-input:focus {
@@ -119,7 +121,7 @@ p.lobby-chat-message {
 }
 
 span.lobby-chat-timestamp, span.lobby-chat-username {
-    color: #8B0000;
+    color: #fff;
 }
 
 span.lobby-chat-username {

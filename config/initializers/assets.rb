@@ -3,6 +3,7 @@
 # Version of your assets, change this if you want to expire all your assets.
 Rails.application.config.assets.version = '1.0'
 Rails.application.config.assets.precompile += %w( signin.css  )
+Rails.application.config.assets.precompile += %w( signup.css  )
 Rails.application.config.assets.precompile += %w( lobby.css  )
 Rails.application.config.assets.precompile += %w( logout.css  )
 Rails.application.config.assets.precompile += %w( game.css  )
