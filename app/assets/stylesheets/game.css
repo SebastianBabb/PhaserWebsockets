@@ -1,0 +1,8 @@
+body {
+    background-image:url(/assets/tank.png);
+    background-color: #000;
+}
+
+#game {
+    margin-top: 100px;
+}

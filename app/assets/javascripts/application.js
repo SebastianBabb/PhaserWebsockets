@@ -14,4 +14,8 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require bootstrap
-//= require_tree .
+// require_tree .
+// Requires the missile-command-src directory in app/assets/javascript/
+//= require_tree ./phaser
+//= require_tree ./lobby
+//= require_tree ./twisted-metal-src
