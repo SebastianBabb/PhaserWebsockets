@@ -8,11 +8,13 @@ require 'erb'
 require_relative '../models/tank.rb'
 
 class GameBackend 
+    # Flags.
     CREATE_CLIENT = 0;
     ADD_CLIENT    = 1
     UPDATE_CLIENT = 2;
     DELETE_CLIENT = 3;
 
+    ### Needed for heroku ###
     KEEPALIVE_TIME = 15 # in seconds
     CHANNEL = "battledome"
 
@@ -26,20 +28,17 @@ class GameBackend
   end
 
   def call(env)
-        # Started the game. Two players minimum.
+        # Start the game when second player joins.
         if 1 < @tanks.length && !@game_started
-            p "GAME STARTED"
             @game_started = true
         end
 
-        p "Environment: #{env['PATH_INFO']}"
-      # Only load the backend server when websocket attempts to connect to */chat
+      # Only load the server when websocket attempts to connect to */game
       if env['PATH_INFO'] == '/game' 
         if Faye::WebSocket.websocket?(env)
           ws = Faye::WebSocket.new(env, nil, {ping: KEEPALIVE_TIME })
           # Socket connection opened.
           ws.on :open do |event|
-            p "*Open Game Websocket: #{ws.object_id}"
             # Create the connecting client's tank object - randomly generate its x,y.
             tank = Tank.new(ws.object_id, rand(500), rand(500)) 
             # Send the new client its tank.
@@ -56,20 +55,12 @@ class GameBackend
             # Store the new clients websocket and tank.
             @clients << ws
             @tanks[ws.object_id] = tank
-
-
-            p "Number of clients: #{@clients.length}"
-            p "Number of tanks: #{@tanks.length}"
         end
 
          # Handle receieved messages.
          ws.on :message do |event|
-
-            p [:message, event.data]
-
             # Parse the tank json into a hash
             tank_json = JSON.parse(event.data) # return a hash
-
             # Use the tank id to get the tank object.
             tank = @tanks[tank_json["id"]]
 
@@ -86,9 +77,6 @@ class GameBackend
             tank.alive = tank_json["alive"]
             tank.score = tank_json["score"]
 
-            p [:id, tank.id]
-            p [:score, tank.score]
-
             # Broadcast the update to all of the clients.
             @clients.each do |client|
                 # Ignore the client that sent the message, it is already up to date.
@@ -100,24 +88,17 @@ class GameBackend
 
             # If the tank is not alive, add it to the defeated list.
             if !tank.alive
-                # Remove it from tanks.
-                # @tanks.delete(tank.id)
                 @defeated.push(tank)
-                # Add it to defeated.
-                p [:tanks, @tanks.length]
-                p [:defeated, @defeated.length]
             end
 
             # Check if the game is over.
             if @tanks.length < 2 && @game_started
-                p "GAME OVER"
                 @game_started = false
             end
 
         end
 
         ws.on :close do |event|
-            p "*Close Game Websocket: #{ws.object_id}"
             remove_client(ws)
         end
 
@@ -159,10 +140,6 @@ end
 
         # Set the socket to nil. 
         ws = nil
-
-
-        p "Number of clients: #{@clients.length}"
-        p "Number of tanks: #{@tanks.length}"
     end
 
 end

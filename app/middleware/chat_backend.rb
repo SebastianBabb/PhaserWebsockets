@@ -5,12 +5,14 @@ require 'json'
 require 'erb'
 
 class ChatBackend 
+    ### Needed for heroku ###
     KEEPALIVE_TIME = 15 # in seconds
     CHANNEL = "lobby-chat"
 
     def initialize(app)
       @app     = app
       @clients = []
+      ### Needed for heroku ###
       #uri = URI.parse(ENV["REDISCLOUD_URL"])
       #@redis = Redis.new(host: uri.host, port: uri.port, password: uri.password)
       #Thread.new do
@@ -30,13 +32,11 @@ class ChatBackend
         if Faye::WebSocket.websocket?(env)
           ws = Faye::WebSocket.new(env, nil, {ping: KEEPALIVE_TIME })
           ws.on :open do |event|
-            p [:open, ws.object_id]
-            p ["Openning Chat Websocket"]
             @clients << ws
           end
 
           ws.on :message do |event|
-            p [:message, event.data]
+            ### Needed for heroku ###
             #@redis.publish(CHANNEL, sanitize(event.data))
             @clients.each do |client|
                 client.send(event.data)
@@ -44,8 +44,6 @@ class ChatBackend
           end
 
           ws.on :close do |event|
-            p [:close, ws.object_id, event.code, event.reason]
-            p ["Closing Chat Websocket"]
             @clients.delete(ws)
             ws = nil
           end
