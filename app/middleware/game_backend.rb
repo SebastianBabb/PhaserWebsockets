@@ -25,16 +25,22 @@ class GameBackend
       @defeated = []      # Dead tanks.
 
       @game_started = false;
-  end
+    end
 
-  def call(env)
+
+    def call(env)
+        # Check if game is started with another player
         # Start the game when second player joins.
-        if 1 < @tanks.length && !@game_started
-            @game_started = true
-        end
+        @game_started = (1 < @tanks.length) && (!@game_started)
 
-      # Only load the server when websocket attempts to connect to */game
-      if env['PATH_INFO'] == '/game' 
+        #codesmell == bad
+
+        #if 1 < @tanks.length && !@game_started
+        #    @game_started = true
+        #end
+
+        # Only load the server when websocket attempts to connect to */game
+        if env['PATH_INFO'] == '/game' 
         if Faye::WebSocket.websocket?(env)
           ws = Faye::WebSocket.new(env, nil, {ping: KEEPALIVE_TIME })
           # Socket connection opened.
@@ -109,7 +115,12 @@ class GameBackend
 else
     @app.call(env)
 end
+
 end
+        
+    end
+        
+    end
 
     # Returns the tank object with the corresponding id.
     def get_tank_by_id(id)
@@ -141,5 +152,20 @@ end
         # Set the socket to nil. 
         ws = nil
     end
+
+    def update_tank()
+        tank.x_pos = tank_json["x_pos"]
+        tank.y_pos = tank_json["y_pos"]
+        tank.angle = tank_json["angle"]
+        tank.turret_rotation = tank_json["turret_rotation"]
+        tank.speed = tank_json["speed"]
+        tank.fire = tank_json["fire"]
+        tank.fire_x = tank_json["fire_x"]
+        tank.fire_y = tank_json["fire_y"]
+        tank.health = tank_json["health"]
+        tank.alive = tank_json["alive"]
+        tank.score = tank_json["score"]
+    end
+
 
 end
