@@ -79,6 +79,9 @@ class GameBackend
                 if client != ws
                     # Send the tank as a json with the UPDATE_CLIENT message.
                     client.send(tank.jsonify(UPDATE_CLIENT))
+                    #SEND HIGH SCORE TO DATABASE
+                    #NOT WORKING
+                    #tank.update_highscore()
                 end
             end
             

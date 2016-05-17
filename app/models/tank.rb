@@ -5,6 +5,7 @@
 #
 
 require 'json'
+#require '../controllers/HighScoreController'
 
 class Tank
     # Accesors and mutators.
@@ -37,5 +38,11 @@ class Tank
 
        # Convert the hash to a json and return. 
        JSON.generate(tank) 
+    end
+
+    #update high score
+    #not working yet
+    def update_highscore(newScore)
+        new HighScoreController.CREATE()
     end
 end
