@@ -30,7 +30,7 @@ TwistedMetal.Boot.prototype = {
     create: function () {
         this.input.maxPointers = 1;
         this.stage.disableVisibilityChange = true;
-
+        //default game window
         if (this.game.device.desktop)
         {
             this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -42,6 +42,7 @@ TwistedMetal.Boot.prototype = {
             this.scale.pageAlignVertically = true;
             this.scale.updateLayout(true);
         }
+        //resize if necessary
         else
         {
             this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -67,7 +68,7 @@ TwistedMetal.Boot.prototype = {
     },
 
     /**
-    *
+    *check orientation of game
     *
     */
     enterIncorrectOrientation: function () {
