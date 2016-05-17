@@ -15,11 +15,18 @@ TwistedMetal.Boot = function (game) {
 // Add preload and create functions.
 TwistedMetal.Boot.prototype = {
 
+    /**
+    *preload image until gae loads 
+    *
+    */
     preload: function () {
         this.load.image('preloaderBar', '/twisted-metal/preload.png');
 
     },
-
+    /**
+    *Create Window for JS window to display the game
+    *
+    */
     create: function () {
         this.input.maxPointers = 1;
         this.stage.disableVisibilityChange = true;
@@ -59,6 +66,10 @@ TwistedMetal.Boot.prototype = {
     gameResized: function (width, height) {
     },
 
+    /**
+    *
+    *
+    */
     enterIncorrectOrientation: function () {
 
         TwistedMetal.orientated = false;
@@ -66,7 +77,9 @@ TwistedMetal.Boot.prototype = {
         document.getElementById('orientation').style.display = 'block';
 
     },
-
+    /**
+    *
+    */
     leaveIncorrectOrientation: function () {
 
         TwistedMetal.orientated = true;

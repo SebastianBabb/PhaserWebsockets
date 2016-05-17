@@ -71,17 +71,7 @@ class GameBackend
             tank = @tanks[tank_json["id"]]
 
             # Update the tank object.
-            tank.x_pos = tank_json["x_pos"]
-            tank.y_pos = tank_json["y_pos"]
-            tank.angle = tank_json["angle"]
-            tank.turret_rotation = tank_json["turret_rotation"]
-            tank.speed = tank_json["speed"]
-            tank.fire = tank_json["fire"]
-            tank.fire_x = tank_json["fire_x"]
-            tank.fire_y = tank_json["fire_y"]
-            tank.health = tank_json["health"]
-            tank.alive = tank_json["alive"]
-            tank.score = tank_json["score"]
+            update_tank
 
             # Broadcast the update to all of the clients.
             @clients.each do |client|
@@ -91,7 +81,8 @@ class GameBackend
                     client.send(tank.jsonify(UPDATE_CLIENT))
                 end
             end
-
+            
+            #CLINT HAS LOST
             # If the tank is not alive, add it to the defeated list.
             if !tank.alive
                 @defeated.push(tank)
@@ -103,7 +94,7 @@ class GameBackend
             end
 
         end
-
+        
         ws.on :close do |event|
             remove_client(ws)
         end

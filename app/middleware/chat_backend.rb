@@ -35,9 +35,21 @@ class ChatBackend
             @clients << ws
           end
 
+          # IF WE WANT TO DISPLAY THE CLIENT CONNECTING
+          #ws.on :connect do |event|
+
+            ### Needed for heroku ###
+            #@redis.publish(CHANNEL, sanitize(event.data))
+
+          #  @clients.each do |client|
+          #    client.send(event.data)
+          #  end
+          #end
+
           ws.on :message do |event|
             ### Needed for heroku ###
             #@redis.publish(CHANNEL, sanitize(event.data))
+
             @clients.each do |client|
                 client.send(event.data)
             end
