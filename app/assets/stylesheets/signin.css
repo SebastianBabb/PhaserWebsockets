@@ -1,4 +1,95 @@
+.submit{
+  
+}
+
+body {
+  /*background-image:url(http://pse7en.webs.com/TM%20Shirt/Twistedmetal%20red%20sweet%20tooth.jpg);*/
+  /*background-color: #000;*/
+  background-image:url(/assets/Tank2.png);
+  background-size:cover;
+  background-repeat:no-repeat;
+  /*background-position: 50% 50%;*/
+
+}
 
 .login-container {
     margin-top:10%;
+}
+
+/* Causes background scaling issues */
+.vertical-center {
+  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 80vh; /* These two lines are counted as one :-)       */
+  display: flex;
+  align-items: center;
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-signin .checkbox {
+  font-weight: normal;
+}
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+  opacity: 0.5;
+  filter: alpha(opacity=60);
+  background-color:#fff;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+  background-color:#fff;
+}
+/*
+text field for email
+*/
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  background-color:#fff;
+}
+/*
+text field for password
+*/
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  background-color:#fff;
+}
+
+.btn {
+    background-color:#740D10;
+    border-color:#220807;
+}
+/*
+color when hover
+*/
+.btn:hover {
+    background-color:#54080B;
+    border-color:#220807;
+}
+/*
+color when in use
+*/
+.btn:active {
+    background-color:#54080B;
+    border-color:#220807;
+}
+
+.links {
+    color: #fff;
 }
