@@ -48,12 +48,18 @@ body {
   z-index: 2;
   background-color:#fff;
 }
+/*
+text field for email
+*/
 .form-signin input[type="email"] {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
   background-color:#fff;
 }
+/*
+text field for password
+*/
 .form-signin input[type="password"] {
   margin-bottom: 10px;
   border-top-left-radius: 0;
@@ -65,12 +71,16 @@ body {
     background-color:#740D10;
     border-color:#220807;
 }
-
+/*
+color when hover
+*/
 .btn:hover {
     background-color:#54080B;
     border-color:#220807;
 }
-
+/*
+color when in use
+*/
 .btn:active {
     background-color:#54080B;
     border-color:#220807;
