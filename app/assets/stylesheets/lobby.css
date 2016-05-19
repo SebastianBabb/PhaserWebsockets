@@ -1,7 +1,9 @@
 body, html {
   /*height: 100%;*/
 }
-
+/*
+set background image and color
+*/
 body {
   background-image:url(/assets/tank.png);
   background-size:cover;
@@ -10,7 +12,9 @@ body {
   background-color: #000;
   margin-top:0px;
 }
-
+/*
+center lobby
+*/
 .lobby-container {
     position: absolute;
     top:0px;
